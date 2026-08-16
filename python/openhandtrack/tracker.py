@@ -359,7 +359,8 @@ class HandTracker:
         try:
             from mediapipe import Image, ImageFormat  # mediapipe >= 0.10.14
         except ImportError:  # older 0.10.x releases
-            from mediapipe.tasks.python.vision import ImageFormat, MpImage as Image  # type: ignore[attr-defined]
+            from mediapipe.tasks.python.vision import ImageFormat  # type: ignore[attr-defined]
+            from mediapipe.tasks.python.vision import MpImage as Image
         return Image(image_format=ImageFormat.SRGB, data=rgb)
 
     def _convert_result(self, raw, timestamp_ms: int) -> HandResult:

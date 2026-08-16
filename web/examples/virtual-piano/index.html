@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenHandTrack — Virtual Piano</title>
+    <style>
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body {
+        font-family: system-ui, sans-serif;
+        background: #0b1220;
+        color: #e2e8f0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        padding: 20px 12px;
+      }
+      h1 { font-size: 1.2rem; }
+      h1 .accent { color: #22d3ee; }
+      .wrap {
+        position: relative;
+        width: min(96vw, 860px);
+        border-radius: 12px;
+        overflow: hidden;
+        border: 1px solid #1f2b45;
+        background: #000;
+      }
+      canvas {
+        display: block;
+        width: 100%;
+        transform: scaleX(-1); /* selfie view */
+      }
+      .hint {
+        color: #94a3b8;
+        font-size: 0.82rem;
+        max-width: 620px;
+        text-align: center;
+        line-height: 1.5;
+      }
+      #status {
+        position: absolute;
+        left: 10px;
+        bottom: 10px;
+        background: rgba(15, 23, 42, 0.8);
+        border: 1px solid #1f2b45;
+        border-radius: 999px;
+        padding: 6px 12px;
+        font-size: 0.78rem;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>OpenHandTrack · <span class="accent">Virtual Piano</span></h1>
+    <div class="wrap">
+      <canvas id="app" width="860" height="720"></canvas>
+      <div id="status">Loading…</div>
+    </div>
+    <p class="hint">
+      The keys live in the bottom half of the screen. Pinch your thumb and
+      index finger while your fingertip is over a key to strike it — slide
+      while pinching to glissando. Sound is synthesized with the Web Audio
+      API; nothing is uploaded.
+    </p>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>
