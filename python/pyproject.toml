@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "openhandtrack"
+version = "0.1.0"
+description = "A clean, reusable wrapper around MediaPipe's Hand Landmarker task. Real-time 3D hand tracking for Python."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+keywords = ["mediapipe", "hand-tracking", "computer-vision", "gesture", "real-time"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Multimedia :: Video",
+    "Topic :: Scientific/Engineering :: Image Recognition",
+]
+dependencies = [
+    "mediapipe>=0.10.14",
+    "numpy>=1.26",
+    "opencv-python>=4.9",
+]
+
+[project.optional-dependencies]
+# Extra deps needed by python/examples/*. Install with: pip install -e ".[examples]"
+examples = [
+    "pynput>=1.7.6",
+    "pycaw>=2022.11.1; sys_platform == 'win32'",
+]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4.0",
+]
+
+[project.urls]
+Repository = "https://github.com/Xznder1984/OpenHandTracker"
+Documentation = "https://github.com/Xznder1984/OpenHandTracker/blob/main/python/README.md"
+Issues = "https://github.com/Xznder1984/OpenHandTracker/issues"
+Homepage = "https://github.com/Xznder1984/OpenHandTracker"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["openhandtrack*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "UP", "B", "SIM"]
+ignore = ["SIM105"]
