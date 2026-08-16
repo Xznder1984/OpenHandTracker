@@ -74,6 +74,19 @@ needs."
 Keep commits small and scoped (`python: …`, `web: …`, `docs: …`), one logical
 change each.
 
+## Releasing (maintainers)
+
+1. Bump `version` in `python/pyproject.toml` (keep it in sync with `openhandtrack/__init__.py`).
+2. Tag and publish a GitHub release — `.github/workflows/publish-pypi.yml` builds the sdist + wheel and publishes to PyPI automatically.
+3. Confirm on [pypi.org/project/openhandtrack](https://pypi.org/project/openhandtrack/).
+
+**One-time trusted-publisher setup** (no token/secrets to store): on PyPI go to
+*Account → Publishing → Add a new pending publisher* and grant **GitHub** with:
+
+- Owner: `Xznder1984`
+- Repository: `OpenHandTracker`
+- Workflow name: `publish-pypi.yml`
+
 ## License
 
 By contributing you agree your changes are licensed under Apache-2.0 (see
