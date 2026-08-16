@@ -14,6 +14,8 @@ Open `http://localhost:5173`, allow camera access, hold your hand up.
 
 That's it. The model (`hand_landmarker.task`, ~7 MB) is fetched from Google's CDN on first load and the wasm runtime is loaded from jsDelivr.
 
+**Try the hosted build**: https://xznder1984.github.io/OpenHandTracker/ — deployed automatically by GitHub Actions on every push to `main`.
+
 ## What's in here
 
 | File | What it does |

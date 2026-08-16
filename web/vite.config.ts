@@ -6,6 +6,9 @@ import { defineConfig } from "vite";
 // reach the dev server over HTTPS (e.g. `vite --host` + a tunnel) or serve
 // the built files over HTTPS.
 export default defineConfig({
+  // Relative base so the built demo works when hosted under a subpath
+  // (e.g. GitHub Pages at https://xznder1984.github.io/OpenHandTracker/).
+  base: "./",
   server: {
     host: true,
     port: 5173,

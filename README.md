@@ -16,6 +16,8 @@ no fighting MediaPipe's raw task API.
 ![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776ab?logo=python&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/web-TypeScript%20%2B%20Vite-3178c6?logo=typescript&logoColor=white)
 ![Platform](https://img.shields.io/badge/platform-macOS%20·%20Windows%20·%20Linux-lightgrey)
+[![CI](https://github.com/Xznder1984/OpenHandTracker/actions/workflows/ci.yml/badge.svg)](https://github.com/Xznder1984/OpenHandTracker/actions/workflows/ci.yml)
+[![Live demo](https://img.shields.io/badge/try%20the%20demo-live-22d3ee)](https://xznder1984.github.io/OpenHandTracker/)
 [![Discussions](https://img.shields.io/badge/ask-a%20question-8b5cf6)](https://github.com/Xznder1984/OpenHandTracker/discussions)
 
 > 📸 **Demo capture wanted.** This README is looking for a real screenshot or
@@ -54,11 +56,18 @@ More in [`python/README.md`](python/README.md).
 
 ## Quickstart — Web
 
+Run it locally:
+
 ```bash
 cd web && npm install && npm run dev
 ```
 
 Open `http://localhost:5173`, allow camera access, hold up your hand.
+
+…or **try it live** — no install needed, works from a phone browser
+(camera requires HTTPS, which Pages provides):
+**[xznder1984.github.io/OpenHandTracker](https://xznder1984.github.io/OpenHandTracker/)**
+
 Full details in [`web/README.md`](web/README.md).
 
 ## Example projects
