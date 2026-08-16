@@ -1,0 +1,39 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+*.egg
+build/
+dist/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# --- Node / web ---
+node_modules/
+web/dist/
+web/.vite/
+npm-debug.log*
+
+# --- MediaPipe model binaries (downloaded at runtime) ---
+*.task
+python/openhandtrack/.cache/
+python/.cache/
+
+# --- OS cruft ---
+.DS_Store
+Thumbs.db
+
+# --- Editors / IDEs ---
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# --- Misc ---
+*.log
+.coverage
+htmlcov/
