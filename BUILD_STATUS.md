@@ -13,5 +13,5 @@ One line per phase. Updated as work progresses so an interrupted session can res
 | 5 | Documentation (root/python/web READMEs, `docs/LANDMARKS.md`, `CONTRIBUTING.md`) | done |
 | 6 | Branding assets (`assets/banner.png`, `assets/logo.png` via `tools/make_assets.py`) | done |
 | — | GitHub: topics added, remote set, description set | done |
-| — | Final test pass + commit | in progress |
-| — | Push to GitHub + tag + release (v0.1.0) | pending |
+| — | Final test pass + commit | done |
+| — | Push to GitHub + tag + release (v0.1.0) | done |
