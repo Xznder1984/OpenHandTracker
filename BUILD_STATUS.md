@@ -17,3 +17,5 @@ One line per phase. Updated as work progresses so an interrupted session can res
 | — | Push to GitHub + tag + release (v0.1.0) | done |
 | — | CI workflows (ruff+pytest, web typecheck+build) green on `main` | done |
 | — | Live demo on GitHub Pages (https://xznder1984.github.io/OpenHandTracker/) | done |
+| — | PyPI publish workflow (trusted publishing, OIDC) wired + dry-run passed | done |
+| — | Web demo: handedness fix + 30fps detection throttle for smoothness | done |
