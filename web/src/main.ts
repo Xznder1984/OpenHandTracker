@@ -15,16 +15,27 @@ const canvas = document.querySelector<HTMLCanvasElement>("#overlay")!;
 const statusText = document.querySelector<HTMLDivElement>("#status")!;
 const ctx = canvas.getContext("2d")!;
 
+// CSS mirrors both #camera and #overlay (scaleX(-1)) giving the user a
+// selfie view.  MediaPipe processes the raw unmirrored frames and labels
+// handedness assuming mirrored input — so its raw labels are already
+// correct for the mirrored display.  `mirrored: true` = "treat input as
+// mirrored" = don't swap the labels.
 const tracker = new HandTracker({
   maxHands: 2,
-  // HTMLVideoElement delivers unmirrored pixels, so the wrapper swaps
-  // MediaPipe's handedness to physical labels (mirrored defaults to false).
+  mirrored: true,
   smoothing: true,
 });
 
+// --- throttled detection loop ------------------------------------------------
+// `detectForVideo` is synchronous WASM work that blocks the main thread.
+// To keep the UI smooth we cap inference at ~30 fps and reuse the last
+// detection result for the frames in between.
+const DETECT_INTERVAL_MS = 33; // ~30 fps detection cap
+let lastDetectTime = 0;
+let lastResult: HandResult | null = null;
+
 let lastFrameTime = performance.now();
 let fps = 0;
-let pendingFrames = 0;
 
 function setStatus(html: string, kind: "info" | "warn" | "error" = "info") {
   statusText.className = kind;
@@ -52,14 +63,20 @@ function startLoop(): void {
     // Throttle work when the tab is hidden (saves battery on laptops).
     if (document.hidden) return;
 
-    pendingFrames++;
-    if (pendingFrames < 2) return; // skip if we fell behind (matches video fps)
-    pendingFrames = 0;
-
     fps = 0.9 * fps + 0.1 * (1000 / Math.max(now - lastFrameTime, 1));
     lastFrameTime = now;
 
-    const result: HandResult = tracker.detectForVideo(video);
+    // Run detection at most every DETECT_INTERVAL_MS; between detections
+    // reuse the previous result so the skeleton stays visible and smooth.
+    let result: HandResult;
+    if (now - lastDetectTime >= DETECT_INTERVAL_MS || lastResult === null) {
+      result = tracker.detectForVideo(video);
+      lastResult = result;
+      lastDetectTime = now;
+    } else {
+      result = lastResult;
+    }
+
     drawHandResult(ctx, video, result, { showLabels: true });
 
     if (result.isEmpty) {
@@ -97,11 +114,12 @@ async function main(): Promise<void> {
     return;
   }
 
-  // Size the canvas to the live video, not the CSS box, so the skeleton
-  // lines up pixel-perfectly (handles devicePixelRatio on phones).
+  // Size the canvas to the CSS display size (not the full video resolution)
+  // so drawImage + skeleton rendering stay cheap on high-res webcams.
   const onVideoReady = () => {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.round(rect.width * devicePixelRatio);
+    canvas.height = Math.round(rect.height * devicePixelRatio);
     video.removeEventListener("loadedmetadata", onVideoReady);
     startLoop();
   };

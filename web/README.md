@@ -50,9 +50,26 @@ The demo works on any device with a browser and a camera. Two notes:
 1. **Secure context**: browsers only expose `getUserMedia` on `https://` (or `localhost`). To test from your phone on the same network, serve over HTTPS — e.g. `npm run dev` for local dev, or `npm run build && npm run preview` and tunnel it.
 2. `facingMode: "user"` prefers the front camera, and the layout is responsive.
 
-## The mirrored-handiness quirk (the one that trips everyone up)
+## The mirrored-handedness quirk (the one that trips everyone up)
 
-An `<video>` element playing a `getUserMedia` feed delivers **unmirrored** pixels. MediaPipe assumes *mirrored* (selfie-style) input when it labels handedness, so the wrapper swaps `Left`/`Right` by default (`mirrored: false`). If you feed it a mirrored source instead, pass `mirrored: true`. Hold up your right hand — if the demo says "Left", flip that flag.
+An `<video>` element playing a `getUserMedia` feed delivers **unmirrored**
+pixels. MediaPipe assumes *mirrored* (selfie-style) input when it labels
+handedness. The demo CSS mirrors both the video and canvas (`scaleX(-1)`)
+giving you a selfie view, so MediaPipe's raw labels are already correct
+for what you see — `mirrored: true` tells the wrapper not to swap them.
+
+If you process unmirrored frames **without** a CSS mirror (e.g. a rear
+camera or a video file), pass `mirrored: false` and the wrapper will swap
+the labels for you. Hold up your right hand — if the demo says "Left",
+flip that flag.
+
+## Performance
+
+The demo throttles detection to ~30 fps (`src/main.ts`) so the main thread
+stays responsive even on lower-end hardware. Between detections, the last
+result is reused so the skeleton stays visible and smooth. The canvas is
+sized to the CSS display size (not the full video resolution) to keep
+`drawImage` and skeleton rendering cheap.
 
 ## Build for production
 

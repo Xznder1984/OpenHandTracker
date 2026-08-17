@@ -13,12 +13,12 @@ projects that show how little code it takes. Drop it into your own projects —
 no fighting MediaPipe's raw task API.
 
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
+[![PyPI](https://img.shields.io/pypi/v/openhandtrack?color=3776ab&logo=pypi&logoColor=white)](https://pypi.org/project/openhandtrack/)
 ![Python 3.11+](https://img.shields.io/badge/python-3.11%2B-3776ab?logo=python&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/web-TypeScript%20%2B%20Vite-3178c6?logo=typescript&logoColor=white)
 ![Platform](https://img.shields.io/badge/platform-macOS%20·%20Windows%20·%20Linux-lightgrey)
 [![CI](https://github.com/Xznder1984/OpenHandTracker/actions/workflows/ci.yml/badge.svg)](https://github.com/Xznder1984/OpenHandTracker/actions/workflows/ci.yml)
 [![Live demo](https://img.shields.io/badge/try%20the%20demo-live-22d3ee)](https://xznder1984.github.io/OpenHandTracker/)
-[![Discussions](https://img.shields.io/badge/ask-a%20question-8b5cf6)](https://github.com/Xznder1984/OpenHandTracker/discussions)
 
 > 📸 **Demo capture wanted.** This README is looking for a real screenshot or
 > GIF of the webcam demo to drop in here — see `CONTRIBUTING.md`.
@@ -29,13 +29,14 @@ no fighting MediaPipe's raw task API.
 - **Handedness done right** — the mirrored-camera quirk handled and documented
 - **One-Euro smoothing** — the single feature that makes tracking feel good instead of twitchy
 - **Gesture helpers** — `is_fist`, `is_open_palm`, `is_pinch`, `pointing_direction`, `count_extended_fingers`
-- **Zero-friction setup** — model auto-downloads on first use, `npm install && npm run dev` for the web demo
+- **Zero-friction setup** — `pip install openhandtrack` or `npm install && npm run dev`
 - **Runs anywhere** — macOS, Windows, Linux; desktop or phone browser
+- **Live demo** — try it instantly in your browser, no install needed
 
 ## Quickstart — Python
 
 ```bash
-python -m venv .venv && .venv/bin/pip install -e "python/"
+pip install openhandtrack
 ```
 
 ```python
