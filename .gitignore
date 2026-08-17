@@ -16,6 +16,9 @@ venv/
 node_modules/
 web/dist/
 web/.vite/
+docs/node_modules/
+docs/.vitepress/dist/
+docs/.vitepress/cache/
 npm-debug.log*
 
 # --- MediaPipe model binaries (downloaded at runtime) ---

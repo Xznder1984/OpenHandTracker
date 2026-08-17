@@ -1,4 +1,4 @@
-name: Deploy demo to GitHub Pages
+name: Deploy to GitHub Pages
 
 on:
   push:
@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build demo
+    name: Build demo + docs
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -24,16 +24,32 @@ jobs:
         with:
           node-version: "20"
           cache: npm
-          cache-dependency-path: web/package-lock.json
-      - name: Install + build
+          cache-dependency-path: |
+            web/package-lock.json
+            docs/package-lock.json
+
+      - name: Build web demo
         working-directory: web
         run: |
           npm ci
           npm run build
+
+      - name: Build VitePress docs
+        working-directory: docs
+        run: |
+          npm ci
+          npm run build
+
+      - name: Combine demo + docs into deploy dir
+        run: |
+          mkdir -p _site/docs
+          cp -r web/dist/* _site/
+          cp -r docs/.vitepress/dist/* _site/docs/
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v5
         with:
-          path: web/dist
+          path: _site
 
   deploy:
     name: Deploy to GitHub Pages

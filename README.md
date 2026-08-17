@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="assets/banner.png" alt="OpenHandTrack banner" width="720" />
+  <img src="https://raw.githubusercontent.com/Xznder1984/OpenHandTracker/main/assets/banner.png" alt="OpenHandTrack banner" width="720" />
 </p>
 
 # OpenHandTrack
