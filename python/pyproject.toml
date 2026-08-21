@@ -4,10 +4,14 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "openhandtrack"
-version = "0.1.1"
+version = "0.1.2"
 description = "A clean, reusable wrapper around MediaPipe's Hand Landmarker task. Real-time 3D hand tracking for Python."
 readme = "README.md"
-requires-python = ">=3.11"
+# Upper-bounded because MediaPipe itself does: its wheels cover Python 3.11-3.12
+# on Intel macOS (0.10.x line), and newer lines dropped Intel macOS entirely.
+# Without the bound, pip on e.g. Python 3.14 dies with a cryptic
+# "No matching distribution found for mediapipe" during dependency resolution.
+requires-python = ">=3.11,<3.13"
 license = { text = "Apache-2.0" }
 keywords = ["mediapipe", "hand-tracking", "computer-vision", "gesture", "real-time"]
 classifiers = [
