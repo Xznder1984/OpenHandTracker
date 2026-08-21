@@ -13,12 +13,13 @@ task behind a small, clean API — no fighting `mediapipe.tasks` internals.
 ## Install
 
 ```bash
-python -m venv .venv
+python3.12 -m venv .venv
 .venv/bin/pip install -e "python/[examples]"   # library + example deps
 ```
 
-Requires Python 3.11+. The `mediapipe` wheel pulls in `numpy` + `opencv-python`
-automatically.
+Requires **Python 3.11 or 3.12** — MediaPipe does not ship wheels for newer
+Pythons yet, so on 3.13+ `pip install` fails with `No matching distribution
+found for mediapipe`. Use a 3.11/3.12 interpreter to create the venv.
 
 ## Hello world
 

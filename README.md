@@ -39,6 +39,14 @@ no fighting MediaPipe's raw task API.
 pip install openhandtrack
 ```
 
+> **Python version note**: MediaPipe currently ships wheels for Python
+> **3.11–3.12** only. On newer Pythons (3.13+) pip will fail with
+> `No matching distribution found for mediapipe` — use a 3.11 or 3.12 venv:
+>
+> ```bash
+> python3.12 -m venv .venv && .venv/bin/pip install openhandtrack
+> ```
+
 ```python
 import cv2
 from openhandtrack import HandTracker
@@ -51,6 +59,20 @@ with HandTracker() as tracker:                # model auto-downloads on first ru
             break
         result = tracker.process(frame)       # BGR frame in, clean result out
         print(len(result), "hand(s) in frame")
+```
+
+### Running the examples
+
+Examples live in `python/examples/` and must run inside the environment where
+`openhandtrack` is installed:
+
+```bash
+# from the repo root, using the project venv:
+.venv/bin/python python/examples/air_draw/air_draw.py
+
+# or activate the venv once, then run normally:
+source .venv/bin/activate
+python examples/air_draw/air_draw.py
 ```
 
 More in [`python/README.md`](python/README.md).
