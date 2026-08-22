@@ -22,3 +22,4 @@ One line per phase. Updated as work progresses so an interrupted session can res
 | — | VitePress docs site deployed to Pages (`/docs/`), landmarks case fix | done |
 | — | v0.1.2 released: `requires-python <3.13` bound, `__version__` sync; verified end-to-end `pip install openhandtrack` from real PyPI (fresh venv → import → model download → smoke test) | done |
 | — | Air Draw: dwell-based colour palette (7 colours) + eraser swatch, keyboard fallback (1-7/e) | done |
+| — | One-line TUI installers (`tui.sh` macOS/Linux, `tui.ps1` Windows): detect Python 3.11-3.12, clone, venv, install, interactive example launcher; bash version verified end-to-end in sandbox | done |

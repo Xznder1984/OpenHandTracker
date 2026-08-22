@@ -2,6 +2,23 @@
 
 ## Python
 
+### One-line TUI installer
+
+Pick an example from an interactive menu; the script handles Python
+detection, cloning, venv and installs for you:
+
+**macOS / Linux**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Xznder1984/OpenHandTracker/main/tui.sh | bash
+```
+
+**Windows (PowerShell)**
+
+```powershell
+irm https://raw.githubusercontent.com/Xznder1984/OpenHandTracker/main/tui.ps1 | iex
+```
+
 ### Install
 
 ```bash
@@ -14,7 +31,10 @@ Or with example dependencies:
 pip install "openhandtrack[examples]"
 ```
 
-Requires Python 3.11+. The `mediapipe` wheel pulls in `numpy` and `opencv-python` automatically.
+Requires **Python 3.11 or 3.12** — MediaPipe does not ship wheels for newer
+Pythons yet, so on 3.13+ pip fails with `No matching distribution found for
+mediapipe`. The TUI above picks a compatible interpreter for you. The
+`mediapipe` wheel pulls in `numpy` and `opencv-python` automatically.
 
 ### Hello World
 

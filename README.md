@@ -35,6 +35,29 @@ no fighting MediaPipe's raw task API.
 
 ## Quickstart — Python
 
+### One-line TUI installer
+
+Don't want to read docs? Run this and pick an example from an interactive
+menu — it finds a compatible Python, clones the repo, sets up the venv,
+installs everything and launches what you choose:
+
+**macOS / Linux**
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/Xznder1984/OpenHandTracker/main/tui.sh | bash
+```
+
+**Windows (PowerShell)**
+
+```powershell
+irm https://raw.githubusercontent.com/Xznder1984/OpenHandTracker/main/tui.ps1 | iex
+```
+
+The TUI is idempotent — rerunning it reuses (and `git pull`s) the checkout at
+`~/OpenHandTracker` and skips install steps that are already done.
+
+### Manual install
+
 ```bash
 pip install openhandtrack
 ```
