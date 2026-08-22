@@ -7,6 +7,7 @@ Short, readable projects that show how little code a hand-tracking app needs.
 ### Air Draw
 
 Pinch to draw in the air, open palm to lift the pen, fist to clear the canvas.
+Hover your fingertip over the palette at the top to switch colours or grab the eraser.
 
 ```bash
 cd python/examples/air_draw
@@ -18,6 +19,8 @@ python air_draw.py
 | Pinch (thumb + index) | Draw |
 | Open palm | Lift pen |
 | Fist | Clear canvas |
+| Hover a swatch ~0.6s | Pick colour / eraser |
+| Keys 1-7 / e | Pick colour directly / eraser |
 
 ### Volume Control
 

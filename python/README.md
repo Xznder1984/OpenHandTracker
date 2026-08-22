@@ -75,7 +75,8 @@ for you. Hold up your right hand: if it reports `Left`, flip the flag.
 
 Short, readable projects that reuse this library — see `examples/`:
 
-- `air_draw/` — pinch to draw in the air, palm to lift, fist to clear.
+- `air_draw/` — pinch to draw in the air, palm to lift, fist to clear; hover
+  the on-screen palette for colours + eraser.
 - `volume_control/` — thumb/index spread controls system volume (with a
   platform-agnostic mock fallback).
 - `presentation_remote/` — swipe gestures send arrow keys to your slides.
