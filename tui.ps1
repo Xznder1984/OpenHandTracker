@@ -106,6 +106,12 @@ Write-Ok "Ready."
 # ---------------------------------------------------------------------------
 $Examples = @(
     @{ slug = "air_draw";             title = "Air Draw";              desc = "pinch to draw in the air, palette + eraser built in" },
+    @{ slug = "finger_count";         title = "Finger Counter";        desc = "counts extended fingers with tip markers" },
+    @{ slug = "peace_selfie";         title = "Peace Selfie";          desc = "hold V-sign for a countdown photo" },
+    @{ slug = "virtual_mouse";        title = "Virtual Mouse";         desc = "index finger steers the cursor, pinch to click" },
+    @{ slug = "air_scroll";           title = "Air Scroll";            desc = "point up/down to scroll, fist locks position" },
+    @{ slug = "pinch_ruler";          title = "Pinch Ruler";           desc = "live thumb-index distance meter" },
+    @{ slug = "two_hand_zoom";        title = "Two-Hand Zoom";         desc = "spread/squeeze both hands to zoom" },
     @{ slug = "volume_control";       title = "Volume Control";        desc = "pinch and drag to set system volume" },
     @{ slug = "presentation_remote";  title = "Presentation Remote";   desc = "swipe to change slides, fist to blank" }
 )

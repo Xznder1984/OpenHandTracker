@@ -38,6 +38,7 @@ MIN_PINCH, MAX_PINCH = 0.12, 0.65
 # Platform volume backends
 # ---------------------------------------------------------------------------
 
+
 class MockVolume:
     """No-op backend so the example runs on any machine, headless or not."""
 
@@ -55,8 +56,9 @@ class MacVolume:
 
 class LinuxVolume:
     def __init__(self) -> None:
-        self._tool = "pactl" if shutil.which("pactl") else (
-            "amixer" if shutil.which("amixer") else None)
+        self._tool = (
+            "pactl" if shutil.which("pactl") else ("amixer" if shutil.which("amixer") else None)
+        )
         if self._tool is None:
             raise RuntimeError("no pactl or amixer found")
 
@@ -101,6 +103,7 @@ def get_volume_controller():
 # Main loop
 # ---------------------------------------------------------------------------
 
+
 def draw_bar(frame: np.ndarray, level: float) -> None:
     """Draw a volume bar in the bottom-left corner."""
     h, w = frame.shape[:2]
@@ -108,8 +111,16 @@ def draw_bar(frame: np.ndarray, level: float) -> None:
     x0, y0 = 12, h - bar_h - 12
     cv2.rectangle(frame, (x0, y0), (x0 + bar_w, y0 + bar_h), (60, 60, 60), -1)
     cv2.rectangle(frame, (x0, y0), (x0 + int(bar_w * level), y0 + bar_h), (0, 200, 255), -1)
-    cv2.putText(frame, f"{level * 100:3.0f}%", (x0 + bar_w + 10, y0 + bar_h - 2),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 255, 255), 2, cv2.LINE_AA)
+    cv2.putText(
+        frame,
+        f"{level * 100:3.0f}%",
+        (x0 + bar_w + 10, y0 + bar_h - 2),
+        cv2.FONT_HERSHEY_SIMPLEX,
+        0.6,
+        (255, 255, 255),
+        2,
+        cv2.LINE_AA,
+    )
 
 
 def main() -> None:
@@ -139,12 +150,27 @@ def main() -> None:
                 if time.monotonic() - last_set > 0.05:  # throttle OS calls
                     controller.set(current)
                     last_set = time.monotonic()
-                cv2.putText(frame, "adjust with thumb/index spread",
-                            (12, 26), cv2.FONT_HERSHEY_SIMPLEX, 0.6,
-                            (255, 255, 255), 2, cv2.LINE_AA)
+                cv2.putText(
+                    frame,
+                    "adjust with thumb/index spread",
+                    (12, 26),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.6,
+                    (255, 255, 255),
+                    2,
+                    cv2.LINE_AA,
+                )
             else:
-                cv2.putText(frame, "hold up ONE hand",
-                            (12, 26), cv2.FONT_HERSHEY_SIMPLEX, 0.6, (255, 200, 0), 2, cv2.LINE_AA)
+                cv2.putText(
+                    frame,
+                    "hold up ONE hand",
+                    (12, 26),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.6,
+                    (255, 200, 0),
+                    2,
+                    cv2.LINE_AA,
+                )
 
             draw_bar(frame, current)
             cv2.imshow(WINDOW, frame)

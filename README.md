@@ -121,6 +121,12 @@ Full details in [`web/README.md`](web/README.md).
 | Example | Stack | It shows |
 |---------|-------|----------|
 | [Air Draw](python/examples/air_draw/) | Python | pinch to draw, palm to lift, fist to clear; hover palette for colours + eraser |
+| [Finger Counter](python/examples/finger_count/) | Python | counts extended fingers with green tip markers |
+| [Peace Selfie](python/examples/peace_selfie/) | Python | hold ✌ for a countdown photo saved to disk |
+| [Virtual Mouse](python/examples/virtual_mouse/) | Python | index finger steers the cursor, pinch to click/drag |
+| [Air Scroll](python/examples/air_scroll/) | Python | point up/down to scroll, fist locks position |
+| [Pinch Ruler](python/examples/pinch_ruler/) | Python | live normalized thumb↔index distance meter |
+| [Two-Hand Zoom](python/examples/two_hand_zoom/) | Python | spread/squeeze both hands to zoom (multi-hand API) |
 | [Volume Control](python/examples/volume_control/) | Python | thumb/index spread → system volume (cross-platform) |
 | [Presentation Remote](python/examples/presentation_remote/) | Python | swipe gestures → slide navigation |
 | [Virtual Piano](web/examples/virtual-piano/) | Web | fingertip + pinch → synthesized notes (Web Audio) |

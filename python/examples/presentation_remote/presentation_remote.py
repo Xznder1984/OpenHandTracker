@@ -29,9 +29,9 @@ from openhandtrack import gestures as g
 WINDOW = "Presentation Remote — swipe left/right | q to quit"
 
 VELOCITY_THRESHOLD = 1.2  # normalized x-units per second
-DEBOUNCE_SECONDS = 0.6    # pause between swipes
-SAMPLE_WINDOW = 0.25      # seconds of history used for velocity
-FADE_SECONDS = 1.0        # how long the swipe indicator stays on screen
+DEBOUNCE_SECONDS = 0.6  # pause between swipes
+SAMPLE_WINDOW = 0.25  # seconds of history used for velocity
+FADE_SECONDS = 1.0  # how long the swipe indicator stays on screen
 
 
 class KeyboardPresser:
@@ -45,8 +45,10 @@ class KeyboardPresser:
             self._ctrl = Controller()
             self._keys = {"Right": Key.right, "Left": Key.left}
         except Exception as exc:
-            print(f"[presentation-remote] keyboard control unavailable ({exc}); "
-                  "simulating keypresses.")
+            print(
+                f"[presentation-remote] keyboard control unavailable ({exc}); "
+                "simulating keypresses."
+            )
             self._mock = True
 
     def press(self, direction: str) -> None:
@@ -104,14 +106,28 @@ def main() -> None:
 
             # HUD
             hint = "swipe left/right to navigate slides"
-            cv2.putText(frame, hint, (12, 26), cv2.FONT_HERSHEY_SIMPLEX, 0.6,
-                        (255, 255, 255), 2, cv2.LINE_AA)
+            cv2.putText(
+                frame,
+                hint,
+                (12, 26),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.6,
+                (255, 255, 255),
+                2,
+                cv2.LINE_AA,
+            )
             if last_action and now - last_action[1] < FADE_SECONDS:
                 label = "NEXT  >>" if last_action[0] == "Right" else "<<  PREV"
-                cv2.putText(frame, label, (12, frame.shape[0] - 14),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.9,
-                            (0, 200, 255) if last_action[0] == "Right" else (255, 160, 0),
-                            3, cv2.LINE_AA)
+                cv2.putText(
+                    frame,
+                    label,
+                    (12, frame.shape[0] - 14),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    0.9,
+                    (0, 200, 255) if last_action[0] == "Right" else (255, 160, 0),
+                    3,
+                    cv2.LINE_AA,
+                )
 
             cv2.imshow(WINDOW, frame)
             if cv2.waitKey(1) & 0xFF == ord("q"):

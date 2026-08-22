@@ -101,6 +101,12 @@ ok "Ready."
 # ---------------------------------------------------------------------------
 EXAMPLES=(
   "air_draw|Air Draw|pinch to draw in the air, palette + eraser built in"
+  "finger_count|Finger Counter|counts extended fingers with tip markers"
+  "peace_selfie|Peace Selfie|hold ✌ for a countdown photo"
+  "virtual_mouse|Virtual Mouse|index finger steers the cursor, pinch to click"
+  "air_scroll|Air Scroll|point up/down to scroll, fist locks position"
+  "pinch_ruler|Pinch Ruler|live thumb↔index distance meter"
+  "two_hand_zoom|Two-Hand Zoom|spread/squeeze both hands to zoom"
   "volume_control|Volume Control|pinch and drag to set system volume"
   "presentation_remote|Presentation Remote|swipe to change slides, fist to blank"
 )
@@ -131,7 +137,7 @@ while true; do
   fi
 
   case "$choice" in
-  [123])
+  [1-9])
     row="${EXAMPLES[$((choice - 1))]}"
     IFS='|' read -r slug title desc <<< "$row"
     printf '\n%s\n' "${BOLD}── $title ──${OFF} ${DIM}(Ctrl+C to stop)${OFF}\n"

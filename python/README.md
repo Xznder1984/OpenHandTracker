@@ -77,6 +77,15 @@ Short, readable projects that reuse this library — see `examples/`:
 
 - `air_draw/` — pinch to draw in the air, palm to lift, fist to clear; hover
   the on-screen palette for colours + eraser.
+- `finger_count/` — counts extended fingers, dots each fingertip.
+- `peace_selfie/` — hold ✌ for a countdown, saves `selfie_N.png`.
+- `virtual_mouse/` — cursor control with the index finger, pinch to click
+  (pynput).
+- `air_scroll/` — point up/down to scroll pages, fist locks (pynput).
+- `pinch_ruler/` — live normalized pinch-distance meter; shows why we divide
+  by hand size.
+- `two_hand_zoom/` — spread/squeeze two hands to zoom; demonstrates
+  `max_hands=2`.
 - `volume_control/` — thumb/index spread controls system volume (with a
   platform-agnostic mock fallback).
 - `presentation_remote/` — swipe gestures send arrow keys to your slides.
