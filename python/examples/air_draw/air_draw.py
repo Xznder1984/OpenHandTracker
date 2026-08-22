@@ -148,6 +148,9 @@ def main() -> None:
     if not cap.isOpened():
         raise SystemExit("No webcam found. Connect a camera and try again.")
 
+    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))  # faster USB path
+    cap.set(cv2.CAP_PROP_FPS, 30)
+
     with (
         HandTracker(max_hands=MAX_HANDS) as tracker,
         LandmarkSmoother(num_hands=MAX_HANDS) as smoother,
@@ -165,6 +168,8 @@ def main() -> None:
         dwell_start: float | None = None
         armed = True  # must leave a swatch before it can trigger again
 
+        frame_idx = 0
+        prev_hands = None
         while True:
             ok, frame = cap.read()
             if not ok:
@@ -177,8 +182,12 @@ def main() -> None:
                 palette = build_palette(frame.shape[1])
             ui_bottom = PALETTE_MARGIN + SWATCH_H
 
-            result = tracker.process(frame)
-            hands = smoother.update(result.hands)
+            # track every other frame, reuse landmarks between: the video
+            # still renders at full camera rate, so motion looks smoother
+            frame_idx += 1
+            if prev_hands is None or frame_idx % 2 == 0:
+                prev_hands = smoother.update(tracker.process(frame).hands)
+            hands = prev_hands
             now = time.monotonic()
 
             if hands:

@@ -39,19 +39,28 @@ def main() -> None:
     if not cap.isOpened():
         raise SystemExit("No webcam found. Connect a camera and try again.")
 
+    cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))  # faster USB path
+    cap.set(cv2.CAP_PROP_FPS, 30)
+
     keyboard = Keyboard()
     baseline: float | None = None
     last_tick = 0.0
 
     with HandTracker(max_hands=2) as tracker, LandmarkSmoother(num_hands=2) as smoother:
+        frame_idx = 0
+        prev_hands = None
         while True:
             ok, frame = cap.read()
             if not ok:
                 break
             frame = cv2.flip(frame, 1)
 
-            result = tracker.process(frame)
-            hands = smoother.update(result.hands)
+            # track every other frame, reuse landmarks between: the video
+            # still renders at full camera rate, so motion looks smoother
+            frame_idx += 1
+            if prev_hands is None or frame_idx % 2 == 0:
+                prev_hands = smoother.update(tracker.process(frame).hands)
+            hands = prev_hands
 
             status = "show both hands"
             if len(hands) == 2:
