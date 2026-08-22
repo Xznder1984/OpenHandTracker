@@ -22,12 +22,12 @@ function Die($msg) {
 
 function Show-Banner {
     Write-Host ""
-    Write-Host "   ___                   _          _    _           _" -ForegroundColor Cyan
-    Write-Host "  / _ \ _ __  ___ _ __  | |__   ___| |__(_)_ __   __| | ___ _ __" -ForegroundColor Cyan
-    Write-Host " | | | | '_ \/ _ \ '__| | '_ \ / _ \ '_ \ | '_ \ / _`` |/ _ \ '__|" -ForegroundColor Cyan
-    Write-Host " | |_| | | |  __/ |    | | | |  __/ | | | | | | | (_| |  __/ |" -ForegroundColor Cyan
-    Write-Host "  \___/|_| |_|\___|_|    |_| |_|\___|_| |_|_|_| |_|\__,_|\___|_|" -ForegroundColor Cyan
-    Write-Host "        real-time hand tracking - pick an example and wave at your webcam" -ForegroundColor DarkGray
+    Write-Host "  ___                   _   _                 _ _____               _" -ForegroundColor Cyan
+    Write-Host " / _ \ _ __   ___ _ __ | | | | __ _ _ __   __| |_   _| __ __ _  ___| | __" -ForegroundColor Cyan
+    Write-Host "| | | | '_ \ / _ \ '_ \| |_| |/ _`` | '_ \ / _`` | | || '__/ _`` |/ __| |/ /" -ForegroundColor Cyan
+    Write-Host "| |_| | |_) |  __/ | | |  _  | (_| | | | | (_| | | || | | (_| | (__|   <" -ForegroundColor Cyan
+    Write-Host " \___/| .__/ \___|_| |_|_| |_|\__,_|_| |_|\__,_| |_||_|  \__,_|\___|_|\_\" -ForegroundColor Cyan
+    Write-Host "      |_|          real-time hand tracking - wave at your webcam" -ForegroundColor DarkGray
     Write-Host ""
 }
 
