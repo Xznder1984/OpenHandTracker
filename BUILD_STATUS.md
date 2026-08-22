@@ -19,3 +19,5 @@ One line per phase. Updated as work progresses so an interrupted session can res
 | — | Live demo on GitHub Pages (https://xznder1984.github.io/OpenHandTracker/) | done |
 | — | PyPI publish workflow (trusted publishing, OIDC) wired + dry-run passed | done |
 | — | Web demo: handedness fix + 30fps detection throttle for smoothness | done |
+| — | VitePress docs site deployed to Pages (`/docs/`), landmarks case fix | done |
+| — | v0.1.2 released: `requires-python <3.13` bound, `__version__` sync; verified end-to-end `pip install openhandtrack` from real PyPI (fresh venv → import → model download → smoke test) | done |
