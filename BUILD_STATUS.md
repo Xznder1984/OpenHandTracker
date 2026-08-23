@@ -26,3 +26,4 @@ One line per phase. Updated as work progresses so an interrupted session can res
 | — | Six new examples: finger_count, peace_selfie, virtual_mouse, air_scroll, pinch_ruler, two_hand_zoom (9 total); wired into README/docs/TUI menus | done |
 | — | TUI: terminal clear before/after runs, session stats (time used / runs / errors), 6-7 detector meme example (10 examples total) | done |
 | — | Finger detection overhaul: rotation-invariant paired distance tests + public gestures.finger_states(); six-seven detector now sums BOTH hands (max_hands=2) so 6/7 is reachable; regression tests for tilted hands; deduped docs | done |
+| v0.1.4 | Released to PyPI: finger detection overhaul + finger_states API; publish workflow green, wheel verified on pypi.org JSON | done |
