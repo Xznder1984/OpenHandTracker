@@ -12,6 +12,8 @@ set -euo pipefail
 REPO_URL="https://github.com/Xznder1984/OpenHandTracker.git"
 DIR="${OHT_DIR:-$HOME/OpenHandTracker}"
 
+command -v clear >/dev/null 2>&1 && clear || printf '\033[2J\033[H'
+
 if [ -t 1 ]; then
   BOLD=$'\033[1m'; DIM=$'\033[2m'; CYAN=$'\033[36m'; GREEN=$'\033[32m'
   YELLOW=$'\033[33m'; RED=$'\033[31m'; OFF=$'\033[0m'
@@ -23,6 +25,25 @@ info() { printf '%s\n' "${CYAN}==>${OFF} $*"; }
 ok()   { printf '%s\n' "${GREEN} ✔ ${OFF}$*"; }
 warn() { printf '%s\n' "${YELLOW} !! ${OFF}$*"; }
 die()  { printf '%s\n' "${RED} ✖ ${OFF}$*" >&2; exit 1; }
+
+reset_screen() { command -v clear >/dev/null 2>&1 && clear || printf '\033[2J\033[H'; }
+
+# --- session stats ---------------------------------------------------------
+SESSION_START=${SECONDS}
+RUNS=0
+FAILS=0
+FAILED_NAMES=""
+
+show_stats() {
+  local elapsed=$((SECONDS - SESSION_START))
+  local mins=$((elapsed / 60)) secs=$((elapsed % 60))
+  local errline="none"
+  [ "$FAILS" -gt 0 ] && errline="$FAILS (${FAILED_NAMES# })"
+  printf '\n%s%s── session ─────────────────────────%s\n' "$BOLD" "$CYAN" "$OFF"
+  printf ' time used : %dm %02ds\n runs      : %d\n errors    : %s\n' \
+    "$mins" "$secs" "$RUNS" "$errline"
+  printf '%s───────────────────────────────────%s\n' "$DIM" "$OFF"
+}
 
 banner() {
   printf '%s\n' "${CYAN}${BOLD}"
@@ -107,6 +128,7 @@ EXAMPLES=(
   "air_scroll|Air Scroll|point up/down to scroll, fist locks position"
   "pinch_ruler|Pinch Ruler|live thumb↔index distance meter"
   "two_hand_zoom|Two-Hand Zoom|spread/squeeze both hands to zoom"
+  "six_seven_detector|6-7 Detector|hold up 6 or 7 fingers... you know what happens"
   "volume_control|Volume Control|pinch and drag to set system volume"
   "presentation_remote|Presentation Remote|swipe to change slides, fist to blank"
 )
@@ -132,6 +154,9 @@ while true; do
   read -r choice < /dev/tty || exit 0
 
   if [ "$choice" = "q" ] || [ "$choice" = "Q" ]; then
+    reset_screen
+    banner
+    show_stats
     ok "bye — rerun anytime with the same curl command"
     exit 0
   fi
@@ -141,8 +166,18 @@ while true; do
     row="${EXAMPLES[$((choice - 1))]}"
     IFS='|' read -r slug title desc <<< "$row"
     printf '\n%s\n' "${BOLD}── $title ──${OFF} ${DIM}(Ctrl+C to stop)${OFF}\n"
-    "$VPY" "python/examples/$slug/$slug.py" || warn "example exited with an error (webcam permission? another app using the camera?)"
+    set +e
+    "$VPY" "python/examples/$slug/$slug.py"
+    status=$?
+    set -e
+    RUNS=$((RUNS + 1))
+    if [ "$status" -ne 0 ] && [ "$status" -ne 130 ]; then # 130 = Ctrl+C, not a crash
+      FAILS=$((FAILS + 1))
+      FAILED_NAMES="$FAILED_NAMES $title"
+      warn "example exited with an error (webcam permission? another app using the camera?)"
+    fi
     pause
+    reset_screen
     ;;
   *)
     warn "unknown option: $choice"

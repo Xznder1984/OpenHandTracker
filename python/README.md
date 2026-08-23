@@ -86,6 +86,9 @@ Short, readable projects that reuse this library — see `examples/`:
   by hand size.
 - `two_hand_zoom/` — spread/squeeze two hands to zoom; demonstrates
   `max_hands=2`.
+- `six_seven_detector/` — rainbow-alert meme detector for 6 or 7 fingers.
+- `six_seven_detector/` — rainbow alert when you hold up six or seven
+  fingers. A meme, but a working one.
 - `volume_control/` — thumb/index spread controls system volume (with a
   platform-agnostic mock fallback).
 - `presentation_remote/` — swipe gestures send arrow keys to your slides.

@@ -8,8 +8,27 @@
 
 $ErrorActionPreference = "Stop"
 
+Clear-Host
+
 $RepoUrl = "https://github.com/Xznder1984/OpenHandTracker.git"
 $Dir = if ($env:OHT_DIR) { $env:OHT_DIR } else { Join-Path $HOME "OpenHandTracker" }
+
+# --- session stats ---------------------------------------------------------
+$script:SessionStart = Get-Date
+$script:Runs = 0
+$script:Fails = 0
+$script:FailedNames = @()
+
+function Show-Stats {
+    $elapsed = (Get-Date) - $script:SessionStart
+    $errs = if ($script:Fails -gt 0) { "$($script:Fails) ($($script:FailedNames -join ', '))" } else { "none" }
+    Write-Host ""
+    Write-Host "-- session -------------------------" -ForegroundColor Cyan
+    Write-Host (" time used : {0:mm\:ss}" -f $elapsed)
+    Write-Host (" runs      : {0}" -f $script:Runs)
+    Write-Host (" errors    : {0}" -f $errs)
+    Write-Host "------------------------------------" -ForegroundColor DarkGray
+}
 
 function Write-Info($msg) { Write-Host "==>" -ForegroundColor Cyan -NoNewline; Write-Host " $msg" }
 function Write-Ok($msg)   { Write-Host " ok " -ForegroundColor Green -NoNewline; Write-Host " $msg" }
@@ -112,6 +131,7 @@ $Examples = @(
     @{ slug = "air_scroll";           title = "Air Scroll";            desc = "point up/down to scroll, fist locks position" },
     @{ slug = "pinch_ruler";          title = "Pinch Ruler";           desc = "live thumb-index distance meter" },
     @{ slug = "two_hand_zoom";        title = "Two-Hand Zoom";         desc = "spread/squeeze both hands to zoom" },
+    @{ slug = "six_seven_detector";   title = "6-7 Detector";          desc = "hold up 6 or 7 fingers... you know what happens" },
     @{ slug = "volume_control";       title = "Volume Control";        desc = "pinch and drag to set system volume" },
     @{ slug = "presentation_remote";  title = "Presentation Remote";   desc = "swipe to change slides, fist to blank" }
 )
@@ -135,6 +155,9 @@ while ($true) {
     $choice = Read-Host "  choose"
 
     if ($choice -eq "q" -or $choice -eq "Q") {
+        Clear-Host
+        Show-Banner
+        Show-Stats
         Write-Ok "bye - rerun anytime with the same command"
         break
     }
@@ -143,12 +166,18 @@ while ($true) {
     if ([int]::TryParse($choice, [ref]$index) -and $index -ge 1 -and $index -le $Examples.Count) {
         $e = $Examples[$index - 1]
         $script = Join-Path $Dir "python\examples\$($e.slug)\$($e.slug).py"
-        Write-Host ""
+        Clear-Host
         Write-Host "-- $($e.title) -- (Ctrl+C to stop)" -ForegroundColor White
         Write-Host ""
         & $VPy $script
-        if (-not $?) { Write-Warn2 "example exited with an error (webcam permission? another app using the camera?)" }
+        $script:Runs++
+        if ($LASTEXITCODE -ne 0) {
+            $script:Fails++
+            $script:FailedNames += $e.title
+            Write-Warn2 "example exited with an error (webcam permission? another app using the camera?)"
+        }
         Pause-Enter
+        Clear-Host
     } else {
         Write-Warn2 "unknown option: $choice"
     }

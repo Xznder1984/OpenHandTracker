@@ -127,6 +127,9 @@ Full details in [`web/README.md`](web/README.md).
 | [Air Scroll](python/examples/air_scroll/) | Python | point up/down to scroll, fist locks position |
 | [Pinch Ruler](python/examples/pinch_ruler/) | Python | live normalized thumb↔index distance meter |
 | [Two-Hand Zoom](python/examples/two_hand_zoom/) | Python | spread/squeeze both hands to zoom (multi-hand API) |
+| [6-7 Detector](python/examples/six_seven_detector/) | Python | hold up 6 or 7 fingers and witness the brainrot |
+| [6-7 Detector](python/examples/six_seven_detector/) | Python | hold up six or seven fingers, embrace the brainrot |
+| [6-7 Detector](python/examples/six_seven_detector/) | Python | rainbow alert when you hold up 6 or 7 fingers (yes, really) |
 | [Volume Control](python/examples/volume_control/) | Python | thumb/index spread → system volume (cross-platform) |
 | [Presentation Remote](python/examples/presentation_remote/) | Python | swipe gestures → slide navigation |
 | [Virtual Piano](web/examples/virtual-piano/) | Web | fingertip + pinch → synthesized notes (Web Audio) |

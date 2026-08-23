@@ -73,6 +73,26 @@ Spread both hands apart to zoom in, squeeze to zoom out (Ctrl+scroll under the h
 | Spread / squeeze | Zoom in / out |
 | Hide one hand | Reset baseline |
 
+### 6-7 Detector
+
+A completely serious computer-vision application: it watches your hand and triggers a rainbow alert the instant you exhibit **six or seven** extended fingers. Persistent 67 counter, terminal bell, zero scientific value.
+
+| Gesture | Action |
+|---------|--------|
+| Show 6 or 7 fingers | MEME DETECTED — rainbow alert + counter++ |
+| Anything else | Be humble |
+
+### 6-7 Detector
+
+Watches your hand for six or seven extended fingers and triggers a rainbow
+alert with a persistent counter. Uses `gestures.count_extended_fingers` —
+which is the whole detection logic, and the joke.
+
+| Gesture | Action |
+|---------|--------|
+| Show 6 or 7 fingers | MEME DETECTED — rainbow alert + counter |
+| `q` | Quit (sit) |
+
 ### Volume Control
 
 Thumb/index spread controls system volume. Works on macOS (osascript), Windows (pycaw), and Linux (pactl). Falls back to a mock for testing without audio hardware.
