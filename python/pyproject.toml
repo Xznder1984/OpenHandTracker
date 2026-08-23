@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "openhandtrack"
-version = "0.1.3"
+version = "0.1.4"
 description = "A clean, reusable wrapper around MediaPipe's Hand Landmarker task. Real-time 3D hand tracking for Python."
 readme = "README.md"
 # Upper-bounded because MediaPipe itself does: its wheels cover Python 3.11-3.12

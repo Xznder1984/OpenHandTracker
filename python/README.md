@@ -54,7 +54,8 @@ cap.release()
 | `Landmark` | `.x`, `.y`, `.z` in normalized units. |
 | `LandmarkSmoother(num_hands, min_cutoff, beta, …)` | One-Euro smoothing across frames. `smoother.update(result.hands)` → smoothed hands. |
 | `OneEuroFilter` / `ExponentialMovingAverage` | Raw filters, if you want them standalone. |
-| `gestures.count_extended_fingers(hand)` | 0–5. |
+| `gestures.finger_states(hand)` | `[bool] × 5` per-finger extension flags, thumb → pinky. |
+| `gestures.count_extended_fingers(hand)` | 0–5. Rotation-invariant, jitter-stable. |
 | `gestures.is_fist(hand)` / `is_open_palm(hand)` | Boolean pose checks. |
 | `gestures.is_pinch(hand, threshold)` | `(bool, distance)` — distance is useful for pinch-to-grab. |
 | `gestures.pinch_distance(hand)` | Thumb↔index gap normalized by hand size. |
