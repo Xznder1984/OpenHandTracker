@@ -16,24 +16,8 @@ from openhandtrack import gestures as g
 
 WINDOW = "Finger Counter — show your hand | q to quit"
 
-#: (tip, pip) landmark pairs used to judge "is this finger straight?"
-FINGER_JOINTS = list(g._FINGERS) + [(g.THUMB_TIP, g.THUMB_IP)]
-
-
-def finger_states(hand) -> list[bool]:
-    """Per-finger extended flags: same heuristic as count_extended_fingers."""
-    pts = hand.landmarks
-    wrist = pts[g.WRIST]
-
-    def far(a, b, ref):
-        return (pts[a].x - ref.x) ** 2 + (pts[a].y - ref.y) ** 2 > (pts[b].x - ref.x) ** 2 + (
-            pts[b].y - ref.y
-        ) ** 2
-
-    four = [far(tip, pip, wrist) for tip, pip in FINGER_JOINTS[:4]]
-    # thumb geometry differs: measure against the index MCP, like the library
-    thumb = [far(g.THUMB_TIP, g.THUMB_IP, pts[g.INDEX_MCP])]
-    return four + thumb
+#: fingertip landmark ids, thumb -> pinky (same order as g.finger_states)
+TIP_IDS = (g.THUMB_TIP, g.INDEX_TIP, g.MIDDLE_TIP, g.RING_TIP, g.PINKY_TIP)
 
 
 def main() -> None:
@@ -61,8 +45,8 @@ def main() -> None:
 
             if hands:
                 hand = hands[0]
-                states = finger_states(hand)
-                tips = [pair[0] for pair in FINGER_JOINTS]
+                states = g.finger_states(hand)
+                tips = TIP_IDS
                 for idx, extended in zip(tips, states, strict=True):
                     lm = hand.landmarks[idx]
                     center = (int(lm.x * frame.shape[1]), int(lm.y * frame.shape[0]))

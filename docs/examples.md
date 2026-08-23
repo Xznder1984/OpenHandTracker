@@ -75,69 +75,12 @@ Spread both hands apart to zoom in, squeeze to zoom out (Ctrl+scroll under the h
 
 ### 6-7 Detector
 
-A completely serious computer-vision application: it watches your hand and triggers a rainbow alert the instant you exhibit **six or seven** extended fingers. Persistent 67 counter, terminal bell, zero scientific value.
+Watches up to **both hands** and triggers a rainbow alert the instant the total
+hits **six or seven** extended fingers. Persistent 67 counter, terminal bell,
+zero scientific value. Uses `gestures.count_extended_fingers` summed across
+hands — which is the whole detection logic, and the joke.
 
 | Gesture | Action |
 |---------|--------|
-| Show 6 or 7 fingers | MEME DETECTED — rainbow alert + counter++ |
-| Anything else | Be humble |
-
-### 6-7 Detector
-
-Watches your hand for six or seven extended fingers and triggers a rainbow
-alert with a persistent counter. Uses `gestures.count_extended_fingers` —
-which is the whole detection logic, and the joke.
-
-| Gesture | Action |
-|---------|--------|
-| Show 6 or 7 fingers | MEME DETECTED — rainbow alert + counter |
+| Show 6 or 7 fingers across both hands | MEME DETECTED — rainbow alert + counter |
 | `q` | Quit (sit) |
-
-### Volume Control
-
-Thumb/index spread controls system volume. Works on macOS (osascript), Windows (pycaw), and Linux (pactl). Falls back to a mock for testing without audio hardware.
-
-```bash
-cd python/examples/volume_control
-python volume_control.py
-```
-
-| Gesture | Action |
-|---------|--------|
-| Spread thumb + index | Increase volume |
-| Pinch thumb + index | Decrease volume |
-
-### Presentation Remote
-
-Swipe gestures send arrow keys for slide navigation. Uses pynput (with mock fallback).
-
-```bash
-cd python/examples/presentation_remote
-python presentation_remote.py
-```
-
-| Gesture | Action |
-|---------|--------|
-| Swipe right | Next slide |
-| Swipe left | Previous slide |
-
-## Web Examples
-
-### Virtual Piano
-
-Fingertip tracking + pinch detection triggers piano notes via Web Audio. Each finger maps to a key.
-
-```bash
-cd web/examples/virtual-piano
-npm install
-npm run dev
-```
-
-| Gesture | Action |
-|---------|--------|
-| Fingertip down | Press key |
-| Pinch | Sustain note |
-
-## Adding Your Own
-
-See [Contributing](/contributing) for how to add a new example to the project.

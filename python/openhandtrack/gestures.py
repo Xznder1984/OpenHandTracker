@@ -62,13 +62,63 @@ def _dist(a: Point, b: Point) -> float:
     return math.sqrt((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2 + (a[2] - b[2]) ** 2)
 
 
+def _four_finger_extended(pts: list[Point], mcp: int, pip: int, tip: int) -> bool:
+    """A finger is extended when TWO independent distance tests agree.
+
+    Both tests are rigid-motion invariant (pure distances), so they hold at
+    any hand orientation — unlike heuristics tied to image axes. Requiring
+    agreement suppresses the single-frame landmark jitter that otherwise
+    makes live finger counts flicker.
+    """
+    wrist = pts[WRIST]
+    mcp_pt = pts[mcp]
+    # curled fingers fold their tip back toward the palm/wrist...
+    via_wrist = _dist(pts[tip], wrist) > _dist(pts[pip], wrist)
+    # ...while a straight finger keeps its tip well clear of its own knuckle
+    via_knuckle = _dist(pts[tip], mcp_pt) > _dist(pts[pip], mcp_pt)
+    return via_wrist and via_knuckle
+
+
+def _thumb_extended(pts: list[Point]) -> bool:
+    """Thumb geometry differs from the fingers: judge it against the index
+    knuckle (its tuck target when fisted) plus its own CMC base."""
+    return _dist(pts[THUMB_TIP], pts[INDEX_MCP]) > _dist(pts[THUMB_IP], pts[INDEX_MCP]) and _dist(
+        pts[THUMB_TIP], pts[THUMB_CMC]
+    ) > _dist(pts[THUMB_IP], pts[THUMB_CMC])
+
+
+def finger_states(hand) -> list[bool]:
+    """Per-finger extension flags, ordered thumb → index → middle → ring → pinky.
+
+    Uses paired distance tests (see :func:`_four_finger_extended`) that stay
+    correct regardless of how the hand is rotated relative to the camera, and
+    are far more stable frame-to-frame than single-threshold checks.
+
+    Args:
+        hand: A :class:`Hand` or 21-landmark sequence.
+
+    Returns:
+        A list of five booleans, one per finger in MediaPipe order.
+    """
+    pts = _normalize(hand)
+    four = [
+        _four_finger_extended(pts, mcp, pip, tip)
+        for mcp, pip, tip in (
+            (INDEX_MCP, INDEX_PIP, INDEX_TIP),
+            (MIDDLE_MCP, MIDDLE_PIP, MIDDLE_TIP),
+            (RING_MCP, RING_PIP, RING_TIP),
+            (PINKY_MCP, PINKY_PIP, PINKY_TIP),
+        )
+    ]
+    return [_thumb_extended(pts)] + four
+
+
 def count_extended_fingers(hand, include_thumb: bool = True) -> int:
     """Count how many fingers are extended (straight), 0-5.
 
-    Uses a view-independent heuristic: a finger counts as extended when its
-    fingertip is farther from the wrist than its PIP joint is (a curled finger
-    collapses its tip toward the palm). The thumb is compared against the
-    index MCP instead, since its geometry is different.
+    Uses rotation-invariant paired distance tests (see :func:`finger_states`),
+    so hands held sideways or tilted still count correctly and the result is
+    much less twitchy under landmark noise.
 
     Args:
         hand: A :class:`Hand` or 21-landmark sequence.
@@ -78,23 +128,8 @@ def count_extended_fingers(hand, include_thumb: bool = True) -> int:
     Returns:
         Number of extended fingers (0-5 with the thumb, 0-4 without).
     """
-    pts = _normalize(hand)
-    wrist = pts[WRIST]
-
-    count = sum(
-        1
-        for tip, pip in _FINGERS
-        if _dist(pts[tip], wrist) > _dist(pts[pip], wrist)
-    )
-    if include_thumb and _is_thumb_extended(pts):
-        count += 1
-    return count
-
-
-def _is_thumb_extended(pts: list[Point]) -> bool:
-    """Thumb counts as extended when its tip is farther from the index MCP
-    than the thumb's own IP joint is."""
-    return _dist(pts[THUMB_TIP], pts[INDEX_MCP]) > _dist(pts[THUMB_IP], pts[INDEX_MCP])
+    states = finger_states(hand)
+    return sum(states if include_thumb else states[1:])
 
 
 def is_fist(hand, include_thumb: bool = True) -> bool:
@@ -105,17 +140,12 @@ def is_fist(hand, include_thumb: bool = True) -> bool:
         include_thumb: When False, the thumb is ignored (a "fist" of just the
             four fingers, which is more tolerant of hand geometry).
     """
-    pts = _normalize(hand)
-    wrist = pts[WRIST]
-    all_curled = all(
-        _dist(pts[tip], wrist) <= _dist(pts[pip], wrist)
-        for tip, pip in _FINGERS
-    )
-    if not all_curled:
+    states = finger_states(hand)
+    if any(states[1:]):
         return False
     if not include_thumb:
         return True
-    return not _is_thumb_extended(pts)
+    return not states[0]
 
 
 def is_open_palm(hand, include_thumb: bool = True) -> bool:
@@ -125,17 +155,12 @@ def is_open_palm(hand, include_thumb: bool = True) -> bool:
         hand: A :class:`Hand` or 21-landmark sequence.
         include_thumb: When False, only the four fingers must be extended.
     """
-    pts = _normalize(hand)
-    wrist = pts[WRIST]
-    fingers_out = all(
-        _dist(pts[tip], wrist) > _dist(pts[pip], wrist)
-        for tip, pip in _FINGERS
-    )
-    if not fingers_out:
+    states = finger_states(hand)
+    if not all(states[1:]):
         return False
     if not include_thumb:
         return True
-    return _is_thumb_extended(pts)
+    return states[0]
 
 
 def pinch_distance(hand) -> float:

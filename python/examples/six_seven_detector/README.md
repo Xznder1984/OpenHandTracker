@@ -1,7 +1,7 @@
 # 6-7 Detector 📸🧠
 
-A completely serious computer-vision application that watches your hand and
-alerts you the instant you exhibit **six or seven** extended fingers.
+A completely serious computer-vision application that watches both of your hands and
+alerts you the instant their combined finger count hits **six or seven**.
 
 Rainbow alert border, giant SIX SEVEN text, a persistent 67 counter, and a
 terminal bell. Science.
@@ -17,9 +17,9 @@ terminal bell. Science.
 
 | Gesture | Action |
 |---------|--------|
-| Show 6 or 7 fingers | MEME DETECTED — rainbow alert + counter++ |
+| Show 6 or 7 fingers across both hands | MEME DETECTED — rainbow alert + counter++ |
 | Anything else | Be humble |
 | `q` | Quit (sit) |
 
-Uses `gestures.count_extended_fingers` — that's genuinely the whole detection
+Sums `gestures.count_extended_fingers` over both hands — that's genuinely the whole detection
 logic, which is the joke.

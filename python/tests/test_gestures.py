@@ -98,6 +98,44 @@ def test_is_fist(open_hand, fist_hand):
     assert g.is_fist(open_hand) is False
 
 
+def _rotate(coords, degrees):
+    """Rotate landmarks around their centroid in the image plane."""
+    rad = math.radians(degrees)
+    cos, sin = math.cos(rad), math.sin(rad)
+    cx = sum(p[0] for p in coords) / len(coords)
+    cy = sum(p[1] for p in coords) / len(coords)
+    return [
+        (cx + dx * cos - dy * sin, cy + dx * sin + dy * cos, z)
+        for x, y, z in ((p[0], p[1], p[2]) for p in coords)
+        for dx, dy in [(x - cx, y - cy)]
+    ]
+
+
+@pytest.mark.parametrize("angle", [45, 90, 135, 180, 225, 270])
+def test_finger_count_is_rotation_invariant(open_hand, fist_hand, angle):
+    """Tilting the hand must not change the count (the old wrist-distance
+    heuristic misread hands held sideways — this pins the fix)."""
+    assert g.count_extended_fingers(make_hand(_rotate(OPEN_PALM, angle))) == 5
+    assert g.count_extended_fingers(make_hand(_rotate(FIST, angle))) == 0
+    assert g.is_open_palm(make_hand(_rotate(OPEN_PALM, angle))) is True
+    assert g.is_fist(make_hand(_rotate(FIST, angle))) is True
+
+
+def test_finger_states_matches_count_and_order(open_hand, fist_hand):
+    states_open = g.finger_states(open_hand)
+    states_fist = g.finger_states(fist_hand)
+    assert states_open == [True, True, True, True, True]
+    assert states_fist == [False, False, False, False, False]
+    assert sum(states_open) == g.count_extended_fingers(open_hand)
+    # partial pose: index + middle up only (a "peace" hand)
+    coords = [list(c) for c in FIST]
+    coords[g.INDEX_TIP] = (0.45, 0.60, -0.03)
+    coords[g.MIDDLE_TIP] = (0.50, 0.59, -0.03)
+    partial = make_hand(coords)
+    assert g.finger_states(partial) == [False, True, True, False, False]
+    assert g.count_extended_fingers(partial) == 2
+
+
 def test_is_pinch(open_hand):
     pinching, distance = g.is_pinch(open_hand)
     assert pinching is False

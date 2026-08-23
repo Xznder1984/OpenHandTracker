@@ -32,7 +32,7 @@ def main() -> None:
     cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*"MJPG"))
     cap.set(cv2.CAP_PROP_FPS, 30)
 
-    with HandTracker(max_hands=1) as tracker, LandmarkSmoother(num_hands=1) as smoother:
+    with HandTracker(max_hands=2) as tracker, LandmarkSmoother(num_hands=2) as smoother:
         meme_count = 0
         active = False  # inside a 6/7 streak right now?
         prev_hands = None
@@ -53,7 +53,7 @@ def main() -> None:
             now = time.monotonic()
 
             if hands:
-                count = g.count_extended_fingers(hands[0])
+                count = sum(g.count_extended_fingers(h) for h in hands)
                 if count in (6, 7):
                     if not active:
                         meme_count += 1
@@ -88,7 +88,7 @@ def main() -> None:
 
                 cv2.putText(
                     frame,
-                    f"fingers: {count}",
+                    f"fingers: {count} ({len(hands)} hand{'s' if len(hands) > 1 else ''})",
                     (12, 26),
                     cv2.FONT_HERSHEY_SIMPLEX,
                     0.7,

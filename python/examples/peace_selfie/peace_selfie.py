@@ -20,24 +20,6 @@ from openhandtrack import gestures as g
 WINDOW = "Peace Selfie — hold ✌ to snap a photo | q to quit"
 COUNTDOWN_SECONDS = 3.0
 
-#: (tip, pip) landmark pairs used to judge "is this finger straight?"
-FINGER_JOINTS = list(g._FINGERS) + [(g.THUMB_TIP, g.THUMB_IP)]
-
-
-def finger_states(hand) -> list[bool]:
-    """Per-finger extended flags (same heuristic as count_extended_fingers)."""
-    pts = hand.landmarks
-    wrist = pts[g.WRIST]
-
-    def far(a, b, ref):
-        return (pts[a].x - ref.x) ** 2 + (pts[a].y - ref.y) ** 2 > (pts[b].x - ref.x) ** 2 + (
-            pts[b].y - ref.y
-        ) ** 2
-
-    four = [far(tip, pip, wrist) for tip, pip in FINGER_JOINTS[:4]]
-    thumb = [far(g.THUMB_TIP, g.THUMB_IP, pts[g.INDEX_MCP])]
-    return four + thumb
-
 
 def is_peace(states: list[bool]) -> bool:
     """Index + middle up, ring + pinky down. Thumb is ignored."""
@@ -74,7 +56,7 @@ def main() -> None:
 
             display = frame.copy()
             if hands:
-                states = finger_states(hands[0])
+                states = g.finger_states(hands[0])
                 if is_peace(states):
                     if peace_since is None:
                         peace_since = now
