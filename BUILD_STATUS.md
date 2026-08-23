@@ -24,3 +24,4 @@ One line per phase. Updated as work progresses so an interrupted session can res
 | — | Air Draw: dwell-based colour palette (7 colours) + eraser swatch, keyboard fallback (1-7/e) | done |
 | — | One-line TUI installers (`tui.sh` macOS/Linux, `tui.ps1` Windows): detect Python 3.11-3.12, clone, venv, install, interactive example launcher; bash version verified end-to-end in sandbox | done |
 | — | Six new examples: finger_count, peace_selfie, virtual_mouse, air_scroll, pinch_ruler, two_hand_zoom (9 total); wired into README/docs/TUI menus | done |
+| — | TUI: terminal clear before/after runs, session stats (time used / runs / errors), 6-7 detector meme example (10 examples total) | done |
