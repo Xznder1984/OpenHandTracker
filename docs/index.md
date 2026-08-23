@@ -24,7 +24,7 @@ features:
   - title: One-Euro Smoothing
     details: "Built-in landmark smoothing that eliminates jitter while preserving responsive tracking. The single feature that makes tracking feel good."
   - title: Gesture Helpers
-    details: "Ready-to-use functions — is_fist, is_open_palm, is_pinch, pointing_direction, count_extended_fingers, and pinch_distance."
+    details: "Ready-to-use functions — finger_states, is_fist, is_open_palm, is_pinch, pointing_direction, count_extended_fingers, and pinch_distance."
   - title: Cross-Platform
     details: "Works on macOS, Windows, and Linux. The web demo runs in any modern browser including mobile."
   - title: Zero-Friction Setup

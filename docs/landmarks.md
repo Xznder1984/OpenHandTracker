@@ -69,8 +69,10 @@ palm    0–17
 
 ## Tips
 
-- Fingers **curl** around their PIP: for a curled finger the tip is closer to
-  the wrist than the PIP is. `count_extended_fingers()` uses this.
+- Fingers **curl** around their PIP: a curled fingertip folds back toward the
+  palm, so it ends up close to both the wrist and its own knuckle.
+  `count_extended_fingers()` checks both distances and only counts the finger
+  as extended when both agree — that keeps counts stable on tilted hands.
 - Landmarks can land slightly outside `[0, 1]` when a joint is occluded.
 - `world_landmarks` gives the same 21 points in meters relative to the hand.
 

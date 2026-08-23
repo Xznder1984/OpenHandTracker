@@ -64,12 +64,17 @@ smoothed_hands = smoother.update(result.hands)
 
 | Function | Returns | Description |
 |----------|---------|-------------|
+| `finger_states(hand)` | `list[bool]` | Per-finger extension flags, thumb → pinky. |
 | `is_fist(hand)` | `bool` | True when all fingers are curled. |
 | `is_open_palm(hand)` | `bool` | True when all fingers are extended. |
 | `is_pinch(hand, threshold=0.07)` | `(bool, float)` | Thumb-index proximity + distance. |
 | `pinch_distance(hand)` | `float` | Normalized thumb-index gap (0 = touching). |
 | `pointing_direction(hand)` | `(float, float)` | Unit vector `(dx, dy)` of index finger. |
-| `count_extended_fingers(hand)` | `int` | 0–5 extended fingers. |
+| `count_extended_fingers(hand, include_thumb=True)` | `int` | 0–5 extended fingers. |
+
+All finger-extension helpers use paired distance tests that agree on "extended"
+before a finger counts — rotation-invariant and stable against landmark
+jitter, so hands held sideways count correctly and live counts don't flicker.
 
 ---
 
