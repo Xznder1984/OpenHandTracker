@@ -21,8 +21,9 @@ const ctx = canvas.getContext("2d")!;
 
 const MODEL_URL =
   "https://storage.googleapis.com/mediapipe-models/hand_landmarker/hand_landmarker/float16/1/hand_landmarker.task";
-const WASM_BASE =
-  "https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14/wasm";
+// Same-origin WASM copied from node_modules at build time (web/public/mediapipe/wasm).
+// A CDN path risks glue/binary version drift -> cryptic "ModuleFactory not set".
+const WASM_BASE = new URL("mediapipe/wasm", location.href).href;
 
 interface TrackedHand {
   landmarks: { x: number; y: number; z: number }[];
