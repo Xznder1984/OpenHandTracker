@@ -87,9 +87,9 @@ function interpolateToLatest(now: number): void {
   });
 }
 
-const worker = new Worker(new URL("./detect.worker.ts", import.meta.url), {
-  type: "module",
-});
+// Classic worker (not module): MediaPipe's glue needs importScripts(), which
+// module workers don't provide — see vite.config.ts worker.format note.
+const worker = new Worker(new URL("./detect.worker.ts", import.meta.url));
 
 function post(msg: WorkerInit) {
   worker.postMessage(msg);
@@ -117,6 +117,10 @@ worker.onmessage = (event: MessageEvent<WorkerOut>) => {
   if (msg.type === "ready") {
     workerReady = true;
     setStatus("Camera starting…");
+  } else if (msg.type === "delegateFallback") {
+    // GPU was silently broken; worker rebuilt itself on CPU.
+    setStatus(`GPU unavailable — switched to CPU tracking`, "warn");
+    setTimeout(() => setStatus(""), 4000);
   } else if (msg.type === "error") {
     setStatus(`Tracker error: ${msg.message}`, "error");
   } else if (msg.type === "result") {

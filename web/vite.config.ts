@@ -7,10 +7,16 @@ import { defineConfig } from "vite";
 // the built files over HTTPS.
 export default defineConfig({
   // Visible in the demo status pill so users can confirm which build they run.
-  define: { __BUILD_ID__: JSON.stringify("6a8bb2b4") },
+  define: { __BUILD_ID__: JSON.stringify("6a90c3f1") },
   // Relative base so the built demo works when hosted under a subpath
   // (e.g. GitHub Pages at https://xznder1984.github.io/OpenHandTracker/).
   base: "./",
+  // Classic (IIFE) worker output: MediaPipe's WASM glue relies on
+  // importScripts(), which does not exist in module workers — running the
+  // bundled worker as a module breaks detection with "ModuleFactory not set".
+  worker: {
+    format: "iife",
+  },
   server: {
     host: true,
     port: 5173,
