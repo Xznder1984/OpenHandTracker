@@ -22,8 +22,8 @@ COUNTDOWN_SECONDS = 3.0
 
 
 def is_peace(states: list[bool]) -> bool:
-    """Index + middle up, ring + pinky down. Thumb is ignored."""
-    return states[0] and states[1] and not states[2] and not states[3]
+    """✌ = index + middle up, ring + pinky down. Thumb ignored."""
+    return states[1] and states[2] and not states[3] and not states[4]
 
 
 def main() -> None:
