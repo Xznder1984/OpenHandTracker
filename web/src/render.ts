@@ -34,9 +34,9 @@ export const HAND_CONNECTIONS: readonly (readonly [number, number])[] =
 export interface DrawOptions {
   /** Color per hand label. */
   colors?: { Left: string; Right: string };
-  /** Stroke width of bone lines, in canvas pixels. Default 3. */
+  /** Stroke width of bone lines, in canvas pixels. Default 4.5. */
   lineWidth?: number;
-  /** Radius of the landmark dots, in canvas pixels. Default 4. */
+  /** Radius of the landmark dots, in canvas pixels. Default 6. */
   dotRadius?: number;
   /** Show the handedness label near the wrist. Default true. */
   showLabels?: boolean;
@@ -60,8 +60,8 @@ function inFrame(lm: Landmark): boolean {
  */
 export function drawHand(ctx: CanvasRenderingContext2D, hand: Hand, options: DrawOptions = {}): void {
   const colors = options.colors ?? DEFAULT_COLORS;
-  const lineWidth = options.lineWidth ?? 3;
-  const dotRadius = options.dotRadius ?? 4;
+  const lineWidth = options.lineWidth ?? 4.5;
+  const dotRadius = options.dotRadius ?? 6;
   const showLabels = options.showLabels ?? true;
   const showLandmarks = options.showLandmarks ?? true;
   const width = ctx.canvas.width;

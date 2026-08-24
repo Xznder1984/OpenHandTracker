@@ -16,6 +16,7 @@ import cv2
 
 from openhandtrack import HandTracker, LandmarkSmoother
 from openhandtrack import gestures as g
+from openhandtrack.hud import help_bar, print_controls
 
 WINDOW = "Peace Selfie — hold ✌ to snap a photo | q to quit"
 COUNTDOWN_SECONDS = 3.0
@@ -26,7 +27,15 @@ def is_peace(states: list[bool]) -> bool:
     return states[1] and states[2] and not states[3] and not states[4]
 
 
+
+CONTROLS = [
+    ('hold v-sign (index+middle up)', '3s countdown, then saves selfie_N.png'),
+    ('drop pose mid-count', 'cancels'),
+    ('q', 'quit'),
+]
+
 def main() -> None:
+    print_controls(CONTROLS)
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         raise SystemExit("No webcam found. Connect a camera and try again.")
@@ -110,6 +119,7 @@ def main() -> None:
                 2,
                 cv2.LINE_AA,
             )
+            help_bar(frame, 'hold peace sign for photo countdown | q: quit')
             cv2.imshow(WINDOW, display)
 
             if cv2.waitKey(1) & 0xFF == ord("q"):

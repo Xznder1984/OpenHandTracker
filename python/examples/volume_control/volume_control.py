@@ -26,6 +26,7 @@ import numpy as np
 
 from openhandtrack import HandTracker, LandmarkSmoother
 from openhandtrack import gestures as g
+from openhandtrack.hud import help_bar, print_controls
 from openhandtrack.smoothing import ExponentialMovingAverage
 
 WINDOW = "Volume Control — spread fingers to change volume | q to quit"
@@ -123,7 +124,16 @@ def draw_bar(frame: np.ndarray, level: float) -> None:
     )
 
 
+
+CONTROLS = [
+    ('spread thumb-index', 'louder'),
+    ('close them', 'quieter'),
+    ('hold at minimum ~1s', 'mute toggle'),
+    ('q', 'quit'),
+]
+
 def main() -> None:
+    print_controls(CONTROLS)
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         raise SystemExit("No webcam found. Connect a camera and try again.")
@@ -182,6 +192,7 @@ def main() -> None:
                 )
 
             draw_bar(frame, current)
+            help_bar(frame, 'thumb-index gap sets volume | wide=loud closed=quiet | q: quit')
             cv2.imshow(WINDOW, frame)
             if cv2.waitKey(1) & 0xFF == ord("q"):
                 break

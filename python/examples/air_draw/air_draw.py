@@ -21,6 +21,7 @@ import numpy as np
 
 from openhandtrack import HandTracker, LandmarkSmoother
 from openhandtrack import gestures as g
+from openhandtrack.hud import help_bar, print_controls
 
 WINDOW = "Air Draw — pinch: draw | palm: lift | fist 1s: clear | hover swatches | q: quit"
 CLEAR_HOLD_SECONDS = 1.0
@@ -143,7 +144,17 @@ def draw_hud(frame: np.ndarray, pen_down: bool, color_idx: int, erasing: bool) -
     )
 
 
+
+CONTROLS = [
+    ('pinch', 'draw'),
+    ('open palm', 'lift pen'),
+    ('fist', 'clear canvas'),
+    ('hover swatch ~0.6s / keys 1-7,e', 'pick colour or eraser'),
+    ('q', 'quit'),
+]
+
 def main() -> None:
+    print_controls(CONTROLS)
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         raise SystemExit("No webcam found. Connect a camera and try again.")
@@ -254,7 +265,9 @@ def main() -> None:
             )
             draw_palette(frame, palette, color_idx, erasing, hover, progress)
             draw_hud(frame, pen_down, color_idx, erasing)
-            cv2.imshow(WINDOW, cv2.addWeighted(frame, 1.0, canvas, 1.0, 0))
+            out = cv2.addWeighted(frame, 1.0, canvas, 1.0, 0)
+            help_bar(out, "pinch draw | palm lift | fist clear | q quit")
+            cv2.imshow(WINDOW, out)
 
             key = cv2.waitKey(1) & 0xFF
             if key == ord("q"):

@@ -13,6 +13,7 @@ import cv2
 
 from openhandtrack import HandTracker, LandmarkSmoother
 from openhandtrack import gestures as g
+from openhandtrack.hud import help_bar, print_controls
 
 WINDOW = "Finger Counter — show your hand | q to quit"
 
@@ -20,7 +21,14 @@ WINDOW = "Finger Counter — show your hand | q to quit"
 TIP_IDS = (g.THUMB_TIP, g.INDEX_TIP, g.MIDDLE_TIP, g.RING_TIP, g.PINKY_TIP)
 
 
+
+CONTROLS = [
+    ('show hand', 'big number = extended finger count'),
+    ('q', 'quit'),
+]
+
 def main() -> None:
+    print_controls(CONTROLS)
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         raise SystemExit("No webcam found. Connect a camera and try again.")
@@ -88,6 +96,7 @@ def main() -> None:
                 2,
                 cv2.LINE_AA,
             )
+            help_bar(frame, 'show hand -> count | q: quit')
             cv2.imshow(WINDOW, frame)
 
             if cv2.waitKey(1) & 0xFF == ord("q"):

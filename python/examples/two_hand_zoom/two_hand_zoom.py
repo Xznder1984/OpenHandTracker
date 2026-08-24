@@ -20,6 +20,7 @@ from pynput.keyboard import Controller as Keyboard
 from pynput.keyboard import Key
 
 from openhandtrack import HandTracker, LandmarkSmoother
+from openhandtrack.hud import help_bar, print_controls
 
 WINDOW = "Two-Hand Zoom — spread hands: in, squeeze: out | q to quit"
 
@@ -34,7 +35,17 @@ def center(hand):
     return sum(xs) / len(xs), sum(ys) / len(ys)
 
 
+
+CONTROLS = [
+    ('show both hands', 'capture baseline'),
+    ('spread hands', 'zoom in'),
+    ('squeeze hands', 'zoom out'),
+    ('hide one hand', 'reset baseline'),
+    ('q', 'quit'),
+]
+
 def main() -> None:
+    print_controls(CONTROLS)
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         raise SystemExit("No webcam found. Connect a camera and try again.")
@@ -102,6 +113,7 @@ def main() -> None:
                 2,
                 cv2.LINE_AA,
             )
+            help_bar(frame, 'both hands: spread=in squeeze=out | hide one to reset | q: quit')
             cv2.imshow(WINDOW, frame)
 
             if cv2.waitKey(1) & 0xFF == ord("q"):

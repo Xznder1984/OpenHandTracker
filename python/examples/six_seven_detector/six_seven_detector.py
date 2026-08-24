@@ -19,13 +19,22 @@ import cv2
 
 from openhandtrack import HandTracker, LandmarkSmoother
 from openhandtrack import gestures as g
+from openhandtrack.hud import help_bar, print_controls
 
 WINDOW = "6-7 Detector — six sevennn | q to quit"
 
 RAINBOW = [(0, 0, 255), (0, 127, 255), (0, 255, 255), (0, 200, 0), (255, 0, 180), (130, 0, 255)]
 
 
+
+CONTROLS = [
+    ('6-7 fingers across both hands', 'MEME DETECTED: rainbow + counter'),
+    ('anything else', 'be humble'),
+    ('q', 'quit (sit)'),
+]
+
 def main() -> None:
+    print_controls(CONTROLS)
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         raise SystemExit("No webcam found. Connect a camera and try again.")
@@ -107,6 +116,7 @@ def main() -> None:
                 2,
                 cv2.LINE_AA,
             )
+            help_bar(frame, "show 6 or 7 fingers across BOTH hands... you'll see | q: quit")
             cv2.imshow(WINDOW, frame)
 
             if cv2.waitKey(1) & 0xFF == ord("q"):

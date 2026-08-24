@@ -25,6 +25,7 @@ from pynput.mouse import Controller as MouseController
 
 from openhandtrack import HandTracker, LandmarkSmoother
 from openhandtrack import gestures as g
+from openhandtrack.hud import help_bar, print_controls
 from openhandtrack.smoothing import ExponentialMovingAverage
 
 WINDOW = "Virtual Mouse — finger moves cursor | palm: pause | pinch: click | q to quit"
@@ -50,7 +51,17 @@ def screen_size() -> tuple[int, int]:
     return 1920, 1080
 
 
+
+CONTROLS = [
+    ('move index finger', 'cursor follows'),
+    ('pinch & hold', 'left button down (drag)'),
+    ('release pinch', 'click'),
+    ('open palm', 'pause control'),
+    ('q', 'quit'),
+]
+
 def main() -> None:
+    print_controls(CONTROLS)
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         raise SystemExit("No webcam found. Connect a camera and try again.")
@@ -118,6 +129,7 @@ def main() -> None:
                 2,
                 cv2.LINE_AA,
             )
+            help_bar(frame, 'index moves cursor | pinch: click/drag | palm: pause | q: quit')
             cv2.imshow(WINDOW, frame)
 
             if cv2.waitKey(1) & 0xFF == ord("q"):

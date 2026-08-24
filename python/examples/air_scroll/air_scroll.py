@@ -20,6 +20,7 @@ from pynput.keyboard import Key
 
 from openhandtrack import HandTracker, LandmarkSmoother
 from openhandtrack import gestures as g
+from openhandtrack.hud import help_bar, print_controls
 
 WINDOW = "Air Scroll — point up/down to scroll | fist: lock | palm: stop | q to quit"
 
@@ -29,7 +30,18 @@ MAX_STEPS_PER_TICK = 3
 TICK = 0.05  # seconds between scroll bursts
 
 
+
+CONTROLS = [
+    ('point above midline', 'scroll up'),
+    ('point below midline', 'scroll down'),
+    ('farther from centre', 'faster'),
+    ('fist', 'lock position'),
+    ('open palm', 'stop'),
+    ('q', 'quit'),
+]
+
 def main() -> None:
+    print_controls(CONTROLS)
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         raise SystemExit("No webcam found. Connect a camera and try again.")
@@ -99,6 +111,7 @@ def main() -> None:
             cv2.putText(
                 frame, state, (12, 26), cv2.FONT_HERSHEY_SIMPLEX, 0.7, (0, 200, 255), 2, cv2.LINE_AA
             )
+            help_bar(frame, 'point up/down: scroll | fist: lock | palm: stop | q: quit')
             cv2.imshow(WINDOW, frame)
 
             if cv2.waitKey(1) & 0xFF == ord("q"):

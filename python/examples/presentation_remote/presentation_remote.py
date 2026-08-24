@@ -25,6 +25,7 @@ import cv2
 
 from openhandtrack import HandTracker, LandmarkSmoother
 from openhandtrack import gestures as g
+from openhandtrack.hud import help_bar, print_controls
 
 WINDOW = "Presentation Remote — swipe left/right | q to quit"
 
@@ -60,7 +61,16 @@ class KeyboardPresser:
         self._ctrl.release(key)
 
 
+
+CONTROLS = [
+    ('fist', 'arm swipe mode'),
+    ('swipe left/right (armed)', 'previous/next slide'),
+    ('open palm', 'disarm'),
+    ('q', 'quit'),
+]
+
 def main() -> None:
+    print_controls(CONTROLS)
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         raise SystemExit("No webcam found. Connect a camera and try again.")
@@ -138,6 +148,7 @@ def main() -> None:
                     cv2.LINE_AA,
                 )
 
+            help_bar(frame, 'fist arms mode | swipe L/R = arrow keys | palm disarms | q: quit')
             cv2.imshow(WINDOW, frame)
             if cv2.waitKey(1) & 0xFF == ord("q"):
                 break

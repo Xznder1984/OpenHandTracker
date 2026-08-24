@@ -15,12 +15,21 @@ import cv2
 
 from openhandtrack import HandTracker, LandmarkSmoother
 from openhandtrack import gestures as g
+from openhandtrack.hud import help_bar, print_controls
 
 WINDOW = "Pinch Ruler — thumb↔index distance | q to quit"
 BAR_W, BAR_H = 400, 36
 
 
+
+CONTROLS = [
+    ('spread thumb & index', 'meter rises'),
+    ('touch them', 'PINCH indicator'),
+    ('q', 'quit'),
+]
+
 def main() -> None:
+    print_controls(CONTROLS)
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         raise SystemExit("No webcam found. Connect a camera and try again.")
@@ -96,6 +105,7 @@ def main() -> None:
                     cv2.LINE_AA,
                 )
 
+            help_bar(frame, 'thumb<->index gap shown live | touch = PINCH | q: quit')
             cv2.imshow(WINDOW, frame)
             if cv2.waitKey(1) & 0xFF == ord("q"):
                 break

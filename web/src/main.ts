@@ -30,7 +30,7 @@ const tracker = new HandTracker({
 // `detectForVideo` is synchronous WASM work that blocks the main thread.
 // To keep the UI smooth we cap inference at ~30 fps and reuse the last
 // detection result for the frames in between.
-const DETECT_INTERVAL_MS = 33; // ~30 fps detection cap
+const DETECT_INTERVAL_MS = 45; // ~22 fps detection cap — smoothing hides the gap
 let lastDetectTime = 0;
 let lastResult: HandResult | null = null;
 
@@ -49,7 +49,9 @@ async function startCamera(): Promise<void> {
 
   // facingMode "user" prefers the front camera — works on phones too.
   const stream = await navigator.mediaDevices.getUserMedia({
-    video: { facingMode: "user", width: { ideal: 1280 }, height: { ideal: 720 } },
+    // 720p looks nicer but costs real inference time on integrated GPUs;
+    // 540p keeps the demo smooth while staying plenty sharp for overlays.
+    video: { facingMode: "user", width: { ideal: 960 }, height: { ideal: 540 } },
     audio: false,
   });
   video.srcObject = stream;
@@ -77,7 +79,14 @@ function startLoop(): void {
       result = lastResult;
     }
 
-    drawHandResult(ctx, video, result, { showLabels: true });
+    // Stroke sizes in raw canvas pixels look anemic on HiDPI displays
+    // (a "3px" line is 1.5 logical px on a 2x screen), so scale by DPR.
+    const s = devicePixelRatio;
+    drawHandResult(ctx, video, result, {
+      showLabels: true,
+      lineWidth: Math.round(4.5 * s),
+      dotRadius: Math.round(6 * s),
+    });
 
     if (result.isEmpty) {
       setStatus("No hand in frame — hold your hand up");
