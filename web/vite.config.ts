@@ -6,6 +6,8 @@ import { defineConfig } from "vite";
 // reach the dev server over HTTPS (e.g. `vite --host` + a tunnel) or serve
 // the built files over HTTPS.
 export default defineConfig({
+  // Visible in the demo status pill so users can confirm which build they run.
+  define: { __BUILD_ID__: JSON.stringify("6a8bb2b4") },
   // Relative base so the built demo works when hosted under a subpath
   // (e.g. GitHub Pages at https://xznder1984.github.io/OpenHandTracker/).
   base: "./",

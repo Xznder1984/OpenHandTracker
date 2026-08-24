@@ -150,6 +150,8 @@ function maybeSendFrame(now: number): void {
 let lastFrameTime = performance.now();
 let fps = 0;
 
+declare const __BUILD_ID__: string;
+
 function setStatus(html: string, kind: "info" | "warn" | "error" = "info") {
   statusText.className = kind;
   statusText.innerHTML = html;
@@ -200,7 +202,7 @@ function startLoop(): void {
 }
 
 async function main(): Promise<void> {
-  setStatus("Loading hand-tracking model…");
+  setStatus(`build ${__BUILD_ID__} · loading model…`);
 
   post({
     type: "init",
