@@ -35,7 +35,56 @@ interface TrackedHand {
 // raw labels already match the mirrored display — no swapping needed.
 const smoother = new LandmarkSmoother();
 let latestHands: TrackedHand[] = [];
-let shownHands: TrackedHand[] = []; // interpolated between worker results
+let shownHands: TrackedHand[] = []; // eased toward latest every frame
+let prevHands: TrackedHand[] = []; // pose we're easing FROM
+let lastResultTime = 0;
+
+const cloneHand = (h: TrackedHand): TrackedHand => ({
+  ...h,
+  landmarks: h.landmarks.map((p) => ({ ...p })),
+});
+const cloneHands = (hs: TrackedHand[]): TrackedHand[] => hs.map(cloneHand);
+
+/**
+ * Landmark interpolation between detections: shown = lerp(prev → latest).
+ *
+ * The easing window tracks the actual measurement cadence (detectIntervalMs),
+ * so at ~8 Hz tracking each new pose is reached exactly when the next one
+ * arrives — the skeleton glides continuously instead of stepping. When no
+ * result has arrived yet we ease from wherever we were toward the newest
+ * pose with a fixed 120 ms tail so hands don't teleport on re-acquisition.
+ */
+function interpolateToLatest(now: number): void {
+  if (latestHands.length === 0) {
+    shownHands = [];
+    prevHands = [];
+    return;
+  }
+
+  const span = Math.max(lastResultTime - lastSentTime, 40);
+  // Start halfway to the new pose (responsive) and land exactly as the next
+  // measurement is expected — a continuous glide, never a snap.
+  const raw = Math.min(1, Math.max(0, (now - lastResultTime) / span));
+  const t = 0.5 + 0.5 * raw;
+  const k = 1 - Math.pow(1 - t, 2); // ease-out quad
+
+  shownHands = latestHands.map((hand) => {
+    const from =
+      prevHands.find((p) => p.handedness === hand.handedness) ?? hand;
+    return {
+      handedness: hand.handedness,
+      confidence: hand.confidence,
+      landmarks: hand.landmarks.map((to, j) => {
+        const a = from.landmarks[j] ?? to;
+        return {
+          x: a.x + (to.x - a.x) * k,
+          y: a.y + (to.y - a.y) * k,
+          z: a.z + (to.z - a.z) * k,
+        };
+      }),
+    };
+  });
+}
 
 const worker = new Worker(new URL("./detect.worker.ts", import.meta.url), {
   type: "module",
@@ -70,7 +119,11 @@ worker.onmessage = (event: MessageEvent<WorkerOut>) => {
   } else if (msg.type === "result") {
     tuneInterval(msg.detectMs);
     detectHz = 0.8 * detectHz + 0.2 * (1000 / Math.max(detectIntervalMs, 1));
+    // Keep the previous pose so the render loop can ease toward the new one
+    // instead of snapping — this is what makes low tracking rates look fluid.
+    prevHands = shownHands.length ? cloneHands(shownHands) : latestHands.map(cloneHand);
     latestHands = smoother.update(msg.hands) as TrackedHand[];
+    lastResultTime = performance.now();
     busy = false;
   }
 };
@@ -123,10 +176,7 @@ function startLoop(): void {
     lastFrameTime = now;
 
     maybeSendFrame(now);
-    // One-euro smoothing already glides landmarks; between worker results we
-    // simply hold the last smoothed pose — at 60 fps overlay this reads as
-    // continuous motion even when tracking runs only a few times a second.
-    shownHands = latestHands;
+    interpolateToLatest(now);
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (const hand of shownHands) {
