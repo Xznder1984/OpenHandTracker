@@ -101,6 +101,7 @@ let detectIntervalMs = 50;
 let lastSentTime = 0;
 let detectHz = 0;
 let busy = false;
+let workerReady = false; // model loaded — safe to send frames
 
 function tuneInterval(measuredMs: number): void {
   if (measuredMs > 35) {
@@ -113,6 +114,7 @@ function tuneInterval(measuredMs: number): void {
 worker.onmessage = (event: MessageEvent<WorkerOut>) => {
   const msg = event.data;
   if (msg.type === "ready") {
+    workerReady = true;
     setStatus("Camera starting…");
   } else if (msg.type === "error") {
     setStatus(`Tracker error: ${msg.message}`, "error");
@@ -124,12 +126,13 @@ worker.onmessage = (event: MessageEvent<WorkerOut>) => {
     prevHands = shownHands.length ? cloneHands(shownHands) : latestHands.map(cloneHand);
     latestHands = smoother.update(msg.hands) as TrackedHand[];
     lastResultTime = performance.now();
-    busy = false;
   }
+  // Whatever came back (result/error/ready), the pipeline is free again.
+  busy = false;
 };
 
 function maybeSendFrame(now: number): void {
-  if (busy || video.readyState < 2) return;
+  if (busy || !workerReady || video.readyState < 2) return;
   if (now - lastSentTime < detectIntervalMs) return;
   // createImageBitmap is async GPU-side copy — cheap on the main thread.
   createImageBitmap(video)

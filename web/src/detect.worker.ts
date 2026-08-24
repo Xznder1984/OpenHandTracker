@@ -68,7 +68,18 @@ self.onmessage = async (event: MessageEvent<WorkerInit | WorkerFrame>) => {
     return;
   }
 
-  if (msg.type === "frame" && landmarker) {
+  if (msg.type === "frame") {
+    if (!landmarker) {
+      // Model still loading: acknowledge with an empty result so the main
+      // thread can never deadlock waiting for a reply that never comes.
+      msg.bitmap.close();
+      (self as unknown as Worker).postMessage({
+        type: "result",
+        hands: [],
+        detectMs: 0,
+      } satisfies WorkerOut);
+      return;
+    }
     const t0 = performance.now();
     let out: WorkerOut;
     try {
