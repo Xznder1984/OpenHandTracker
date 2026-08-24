@@ -30,9 +30,20 @@ const tracker = new HandTracker({
 // `detectForVideo` is synchronous WASM work that blocks the main thread.
 // To keep the UI smooth we cap inference at ~30 fps and reuse the last
 // detection result for the frames in between.
-const DETECT_INTERVAL_MS = 45; // ~22 fps detection cap — smoothing hides the gap
+// Detection is synchronous WASM work on the main thread: every call blocks
+// painting. We adapt the cadence to measured cost so weak GPUs slow the
+// detection rate instead of dropping visual frames.
+let detectIntervalMs = 50;
 let lastDetectTime = 0;
 let lastResult: HandResult | null = null;
+
+function tuneInterval(measuredMs: number): void {
+  if (measuredMs > 35) {
+    detectIntervalMs = Math.min(130, detectIntervalMs + 15);
+  } else if (measuredMs < 18 && detectIntervalMs > 50) {
+    detectIntervalMs -= 5;
+  }
+}
 
 let lastFrameTime = performance.now();
 let fps = 0;
@@ -49,9 +60,9 @@ async function startCamera(): Promise<void> {
 
   // facingMode "user" prefers the front camera — works on phones too.
   const stream = await navigator.mediaDevices.getUserMedia({
-    // 720p looks nicer but costs real inference time on integrated GPUs;
-    // 540p keeps the demo smooth while staying plenty sharp for overlays.
-    video: { facingMode: "user", width: { ideal: 960 }, height: { ideal: 540 } },
+    // Inference cost scales with pixels; 360p tracks hands just as well
+    // for an overlay demo and keeps integrated GPUs comfortable.
+    video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 360 } },
     audio: false,
   });
   video.srcObject = stream;
@@ -71,22 +82,17 @@ function startLoop(): void {
     // Run detection at most every DETECT_INTERVAL_MS; between detections
     // reuse the previous result so the skeleton stays visible and smooth.
     let result: HandResult;
-    if (now - lastDetectTime >= DETECT_INTERVAL_MS || lastResult === null) {
+    if (now - lastDetectTime >= detectIntervalMs || lastResult === null) {
+      const t0 = performance.now();
       result = tracker.detectForVideo(video);
+      tuneInterval(performance.now() - t0);
       lastResult = result;
       lastDetectTime = now;
     } else {
       result = lastResult;
     }
 
-    // Stroke sizes in raw canvas pixels look anemic on HiDPI displays
-    // (a "3px" line is 1.5 logical px on a 2x screen), so scale by DPR.
-    const s = devicePixelRatio;
-    drawHandResult(ctx, video, result, {
-      showLabels: true,
-      lineWidth: Math.round(4.5 * s),
-      dotRadius: Math.round(6 * s),
-    });
+    drawHandResult(ctx, video, result, { showLabels: true });
 
     if (result.isEmpty) {
       setStatus("No hand in frame — hold your hand up");
@@ -127,8 +133,11 @@ async function main(): Promise<void> {
   // so drawImage + skeleton rendering stay cheap on high-res webcams.
   const onVideoReady = () => {
     const rect = canvas.getBoundingClientRect();
-    canvas.width = Math.round(rect.width * devicePixelRatio);
-    canvas.height = Math.round(rect.height * devicePixelRatio);
+    // 1x backing store: a devicePixelRatio-sized canvas multiplies every
+    // drawImage/fill cost by dpr^2 — brutal on integrated GPUs — while the
+    // video barely benefits. Strokes are sized to stay bold at 1x.
+    canvas.width = Math.round(rect.width);
+    canvas.height = Math.round(rect.height);
     video.removeEventListener("loadedmetadata", onVideoReady);
     startLoop();
   };

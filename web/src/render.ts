@@ -60,8 +60,8 @@ function inFrame(lm: Landmark): boolean {
  */
 export function drawHand(ctx: CanvasRenderingContext2D, hand: Hand, options: DrawOptions = {}): void {
   const colors = options.colors ?? DEFAULT_COLORS;
-  const lineWidth = options.lineWidth ?? 4.5;
-  const dotRadius = options.dotRadius ?? 6;
+  const lineWidth = options.lineWidth ?? 8;
+  const dotRadius = options.dotRadius ?? 10;
   const showLabels = options.showLabels ?? true;
   const showLandmarks = options.showLandmarks ?? true;
   const width = ctx.canvas.width;
@@ -70,7 +70,11 @@ export function drawHand(ctx: CanvasRenderingContext2D, hand: Hand, options: Dra
   const color = colors[hand.handedness] ?? DEFAULT_COLORS.Right;
   const toPx = (lm: Landmark): [number, number] => [lm.x * width, lm.y * height];
 
-  // Bones
+  // Bones — thick with a soft glow so the skeleton reads instantly,
+  // even over busy backgrounds or small windows.
+  ctx.save();
+  ctx.shadowColor = color;
+  ctx.shadowBlur = 14;
   ctx.strokeStyle = color;
   ctx.lineWidth = lineWidth;
   ctx.lineCap = "round";
@@ -86,9 +90,13 @@ export function drawHand(ctx: CanvasRenderingContext2D, hand: Hand, options: Dra
     ctx.lineTo(bx, by);
   }
   ctx.stroke();
+  ctx.restore();
 
   // Landmark dots
   if (showLandmarks) {
+    ctx.save();
+    ctx.shadowColor = color;
+    ctx.shadowBlur = 12;
     ctx.fillStyle = color;
     ctx.beginPath();
     for (const lm of hand.landmarks) {
@@ -98,6 +106,7 @@ export function drawHand(ctx: CanvasRenderingContext2D, hand: Hand, options: Dra
       ctx.arc(x, y, dotRadius, 0, Math.PI * 2);
     }
     ctx.fill();
+    ctx.restore();
   }
 
   // Handedness label next to the wrist
