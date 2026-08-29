@@ -35,7 +35,7 @@ CONTROLS = [
 ]
 
 def main() -> None:
-    print_controls(CONTROLS)
+    print_controls("Peace Selfie", CONTROLS)
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         raise SystemExit("No webcam found. Connect a camera and try again.")

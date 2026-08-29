@@ -70,7 +70,7 @@ CONTROLS = [
 ]
 
 def main() -> None:
-    print_controls(CONTROLS)
+    print_controls("Presentation Remote", CONTROLS)
     cap = cv2.VideoCapture(0)
     if not cap.isOpened():
         raise SystemExit("No webcam found. Connect a camera and try again.")
